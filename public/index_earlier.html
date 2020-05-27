@@ -27,6 +27,7 @@
     <canvas id="renderCanvas" ></canvas>
 
     <script>
+        document.documentElement.webkitRequestFullscreen();
         var canvas = document.getElementById("renderCanvas"); 
         var engine = new BABYLON.Engine(canvas, true);
 

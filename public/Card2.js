@@ -1,7 +1,33 @@
+var card;
 function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
 
+    var cardOriginX = 3;
+    var cardOriginY = 1;
+    var cardOriginZ = 4;
+
+
+    var f = new BABYLON.Vector4(0.5,0, 1, 1); // front image = half the whole image along the width 
+    var b = new BABYLON.Vector4(0,0, 0.5, 1); // back image = second half along the width     
+    
+    
+    card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.5, width:1, sideOrientation: BABYLON.Mesh.DOUBLESIDE, frontUVs: b, backUVs: f}, scene);
+    card.rotation.x = -1.57;
+    card.rotation.z = -1;
+    card.position = new BABYLON.Vector3(cardOriginX,cardOriginY,cardOriginZ);
+    
+
+    // card.position.y = 0.01;
+    // card.position.z = -3;
+
+    var mat = new BABYLON.StandardMaterial("", scene);
+    mat.diffuseTexture = new BABYLON.Texture("resources/blackCard2.png", scene);
+    mat.specularColor = new BABYLON.Color3(0,0,0);
+    mat.diffuseTexture.hasAlpha = true;
+    card.material = mat;
+
+
     var path = [
-        new BABYLON.Vector3(0, 0.1, 0),
+        new BABYLON.Vector3(cardOriginX, cardOriginY, cardOriginZ),
         new BABYLON.Vector3(xAxis/2, 0.4, zAxis),
         new BABYLON.Vector3(xAxis, yAxis, zAxis),
     ]; 
@@ -10,19 +36,6 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
         path,
         60
     );
-
-    var f = new BABYLON.Vector4(0.5,0, 1, 1); // front image = half the whole image along the width 
-    var b = new BABYLON.Vector4(0,0, 0.5, 1); // back image = second half along the width     
-
-    var card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.5, width: 1, sideOrientation: BABYLON.Mesh.DOUBLESIDE, frontUVs: b, backUVs: f}, scene);
-    card.rotation.x = -1.57;
-    card.position.y = 0.1;
-
-    var mat = new BABYLON.StandardMaterial("", scene);
-    mat.diffuseTexture = new BABYLON.Texture("doubleRoiT.png", scene);
-    mat.diffuseTexture.hasAlpha = true;
-    card.material = mat;
-    
 
     var animationPosition = new BABYLON.Animation("animPos", "position", 150, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     var animationRotation = new BABYLON.Animation("animRot", "rotation.x", 150, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);	
@@ -61,21 +74,23 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
         if(p<40)
             yAngle+=yAxisIncrementValue;
     }
-    
+
     animationPosition.setKeys(keysPosition);
     animationRotation.setKeys(keysRotation);
     animationYRotation.setKeys(keysYAngle);
 
     var animationGroup = new BABYLON.AnimationGroup("Group");
-    animationGroup.onAnimationGroupEndObservable.add(function(){
-        console.log("this.card.position.x");
-    })
     animationGroup.addTargetedAnimation(animationPosition, card);
     animationGroup.addTargetedAnimation(animationRotation, card);
     animationGroup.addTargetedAnimation(animationYRotation, card);
-	
+
+    //animationGroup.play(true);   
     this.playAnimation = function(){
         animationGroup.play(true);   
+    };
+
+    this.getCard = function(){
+        return card;
     }
     
 }

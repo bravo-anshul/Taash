@@ -13,7 +13,7 @@ var createScene = function(){
     light.intensity = 1;
 
     var cameraPosition = new BABYLON.Vector3(0,2,0);
-    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 1, 8, cameraPosition, scene);
+    var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
     camera.attachControl(canvas, true);
 
     
@@ -65,16 +65,18 @@ var createScene = function(){
 
     var cardsArray = [];
 
-    var permCard1 = new CardClass2();
-    permCard1.getCard().position = new BABYLON.Vector3(2,0.1,1);
+    for(var i=0,z=4.5,y=0.1;i<13;i++,y+=0.01,z-=0.3){
+        var permCard1 = new CardClass2(-1,0,0);
+        permCard1.getCard().position = new BABYLON.Vector3(-1,y,z);
+        shadowGenerator.getShadowMap().renderList.push(permCard1.getCard());
+    }
     var permCard2 = new CardClass2();
-    permCard2.getCard().position = new BABYLON.Vector3(1,0.1,1);
+    permCard2.getCard().position = new BABYLON.Vector3(0.1,0.1,2);
     var permCard3 = new CardClass2();
-    permCard3.getCard().position = new BABYLON.Vector3(0,0.1,1);
+    permCard3.getCard().position = new BABYLON.Vector3(1.2,0.1,2);
     var permCard4 = new CardClass2();
-    permCard4.getCard().position = new BABYLON.Vector3(-1,0.1,1);
+    permCard4.getCard().position = new BABYLON.Vector3(2.3,0.1,2);
 
-    //shadowGenerator.getShadowMap().renderList.push(permCard.getCard());
 
     for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
         var tempCard = new CardClass2(firstPlayerCardPosition.xAxis+x,                         

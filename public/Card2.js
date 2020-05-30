@@ -1,9 +1,9 @@
 var card;
-function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
+function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle){
 
-    var cardOriginX = 3;
+    var cardOriginX = 0;
     var cardOriginY = 1;
-    var cardOriginZ = 4;
+    var cardOriginZ = 2;
 
 
     var f = new BABYLON.Vector4(0.5,0, 1, 1); // front image = half the whole image along the width 
@@ -12,24 +12,24 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
     
     card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.5, width:1, sideOrientation: BABYLON.Mesh.DOUBLESIDE, frontUVs: b, backUVs: f}, scene);
     card.rotation.x = -1.57;
-    card.rotation.z = -1;
-    card.position = new BABYLON.Vector3(cardOriginX,cardOriginY,cardOriginZ);
+    card.rotation.z = 0;
+    card.position = new BABYLON.Vector3(cardOriginX,yAxis,cardOriginZ);
     
 
     // card.position.y = 0.01;
     // card.position.z = -3;
 
     var mat = new BABYLON.StandardMaterial("", scene);
-    mat.diffuseTexture = new BABYLON.Texture("resources/blackCard2.png", scene);
+    mat.diffuseTexture = new BABYLON.Texture("resources/blackCardBorder.png", scene);
     mat.specularColor = new BABYLON.Color3(0,0,0);
     mat.diffuseTexture.hasAlpha = true;
     card.material = mat;
 
 
     var path = [
-        new BABYLON.Vector3(cardOriginX, cardOriginY, cardOriginZ),
+        new BABYLON.Vector3(cardOriginX, yAxis, cardOriginZ),
         new BABYLON.Vector3(xAxis/2, 0.4, zAxis),
-        new BABYLON.Vector3(xAxis, yAxis, zAxis),
+        new BABYLON.Vector3(xAxis, 1, zAxis),
     ]; 
     
     var catmullRom = BABYLON.Curve3.CreateCatmullRomSpline(
@@ -53,7 +53,7 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle){
     }
 
     var startingXAngle = -1.57;
-    var endingAngle = 1.04666666667;
+
     var xAxisIncrementValue = getXAxisRotationIncrementValue(startingXAngle,endingAngle);
     for(p = 0; p < catmullRom.getPoints().length; p++) {
         keysRotation.push({

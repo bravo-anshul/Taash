@@ -8,9 +8,12 @@ var createScene = function(){
     scene.clearColor = new BABYLON.Color3(218/255, 216/255, 216/255);;
     //var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(4, 1, 1), scene);
     //var light2 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), scene);
-    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
-    light.position = new BABYLON.Vector3(9,5,-1);
+    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, 1), scene);
+    //light.position = new BABYLON.Vector3(9,4,2);
     light.intensity = 1;
+    var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, 2, 0), scene);
+    //light2.position = new BABYLON.Vector3(9,5,-1);
+    light2.intensity = 2;
 
     var cameraPosition = new BABYLON.Vector3(0,2,0);
     var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
@@ -33,7 +36,7 @@ var createScene = function(){
     getFirstPlayerXAxis();
 
     var firstPlayerCardPosition = {
-        xAxis : -3.5,
+        xAxis : -3.7,
         yAxis : 3,
         zAxis : -1.8,
         yAxisRotation : 0
@@ -41,19 +44,19 @@ var createScene = function(){
     var secondPlayerCardPosition = {
         xAxis : -7.5,
         yAxis : 3,
-        zAxis : 2,
-        yAxisRotation : 2
+        zAxis : 1,
+        yAxisRotation : 2.2
     }
     var thirdPlayerCardPosition = {
         xAxis : -3.5,
-        yAxis : 2.5,
+        yAxis : 2.2,
         zAxis : 7,
         yAxisRotation : 3
     }
     var fourthPlayerCardPosition = {
-        xAxis : 6.5,
+        xAxis : 7.5,
         yAxis : 2.5,
-        zAxis : 2,
+        zAxis : 1,
         yAxisRotation : 4
     }
 
@@ -65,21 +68,9 @@ var createScene = function(){
 
     var cardsArray = [];
 
-    for(var i=0,z=4.5,y=0.1;i<13;i++,y+=0.01,z-=0.3){
-        var permCard1 = new CardClass2(-1,0,0);
-        permCard1.getCard().position = new BABYLON.Vector3(-1,y,z);
-        shadowGenerator.getShadowMap().renderList.push(permCard1.getCard());
-    }
-    var permCard2 = new CardClass2();
-    permCard2.getCard().position = new BABYLON.Vector3(0.1,0.1,2);
-    var permCard3 = new CardClass2();
-    permCard3.getCard().position = new BABYLON.Vector3(1.2,0.1,2);
-    var permCard4 = new CardClass2();
-    permCard4.getCard().position = new BABYLON.Vector3(2.3,0.1,2);
-
 
     for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
-        var tempCard = new CardClass2(firstPlayerCardPosition.xAxis+x,                         
+        var tempCard = new CardClass(firstPlayerCardPosition.xAxis+x,                         
                                     y,
                                     firstPlayerCardPosition.zAxis+z,
                                     firstPlayerCardPosition.yAxisRotation,
@@ -90,52 +81,50 @@ var createScene = function(){
         }
     }
     
-    for(var i=0,x=0,z=0;i<13;i++,x+=0.1,z+=0.2){
-        var tempCard = new CardClass2(secondPlayerCardPosition.xAxis+x,                         
+    for(var i=0,y=1,yr=0.1,x=0,z=0;i<13;i++,z+=0.4,yr+=0.02,x+=0.1){
+
+        var tempCard = new CardClass(secondPlayerCardPosition.xAxis+x,                         
                                     0,
                                     secondPlayerCardPosition.zAxis+z,
-                                    secondPlayerCardPosition.yAxisRotation,
+                                    secondPlayerCardPosition.yAxisRotation-yr,
                                     0.3);
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         secondPlayerArray.push(tempCard);
-        if(i<13){
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
-        }
     }
 
-    for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
-        var tempCard = new CardClass2(thirdPlayerCardPosition.xAxis+x,                         
+    for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.000){
+        var tempCard = new CardClass(thirdPlayerCardPosition.xAxis+x,                         
                                     y,
                                     thirdPlayerCardPosition.zAxis+z,
                                     thirdPlayerCardPosition.yAxisRotation,
-                                   0);
+                                    0.2);
         thirdPlayerArray.push(tempCard);
-        if(i<13){
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
-        }
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        
     }
 
-    for(var i=0,x=0,z=0;i<13;i++,x-=0.1,z+=0.2){
-        var tempCard = new CardClass2(fourthPlayerCardPosition.xAxis+x,                         
+    for(var i=0,y=1,yr=0.01,x=0,z=0;i<13;i++,z+=0.4,yr+=0.05,x-=0.1){
+        var tempCard = new CardClass(fourthPlayerCardPosition.xAxis+x,                         
                                     0,
                                     fourthPlayerCardPosition.zAxis+z,
-                                    fourthPlayerCardPosition.yAxisRotation,
+                                    fourthPlayerCardPosition.yAxisRotation+yr,
                                     0.1);
         fourthPlayerArray.push(tempCard);
-        if(i<13){
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
-        }
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        
     }
 
+    
     async function Tutor1() {
         for(var i=0;i<13;i++){
             firstPlayerArray[i].playAnimation();
-            await sleep(200);
+            await sleep(150);
             secondPlayerArray[i].playAnimation();
-            await sleep(200);
+            await sleep(150);
             thirdPlayerArray[i].playAnimation();
-            await sleep(200);
+            await sleep(150);
             fourthPlayerArray[i].playAnimation();
-
+            await sleep(150);
         }
         
     }
@@ -166,6 +155,8 @@ var createScene = function(){
     // Tutor2();
     // Tutor3();
     // Tutor4();
+
+    
 
     return scene;
 }

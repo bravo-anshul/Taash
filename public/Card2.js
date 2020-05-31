@@ -4,6 +4,7 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle){
     var cardOriginX = 0;
     var cardOriginY = 1;
     var cardOriginZ = 2;
+    var endingYAxis = 1;
 
 
     var f = new BABYLON.Vector4(0.5,0, 1, 1); // front image = half the whole image along the width 
@@ -25,11 +26,10 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle){
     mat.diffuseTexture.hasAlpha = true;
     card.material = mat;
 
-
     var path = [
         new BABYLON.Vector3(cardOriginX, yAxis, cardOriginZ),
         new BABYLON.Vector3(xAxis/2, 0.4, zAxis),
-        new BABYLON.Vector3(xAxis, 1, zAxis),
+        new BABYLON.Vector3(xAxis, 1.5, zAxis),
     ]; 
     
     var catmullRom = BABYLON.Curve3.CreateCatmullRomSpline(
@@ -92,6 +92,7 @@ function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle){
     this.getCard = function(){
         return card;
     }
+
     
 }
 

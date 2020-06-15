@@ -1,4 +1,4 @@
-var card;
+
 function CardClass2(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle){
 
     var cardOriginX = 0;

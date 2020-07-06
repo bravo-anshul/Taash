@@ -2,7 +2,7 @@
 function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     var cardOriginX = 0;
-    var cardOriginZ = 2;
+    var cardOriginZ = 5;
 
     var cardValue = cValue;
 
@@ -112,8 +112,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         
         var path = [
             new BABYLON.Vector3(xAxis, 1, zAxis),
-            new BABYLON.Vector3(0,0.15,heartCardValue)
-            
+            getTableCardPosition(cardValue)
         ]; 
         
         var catmullRom = BABYLON.Curve3.CreateCatmullRomSpline(

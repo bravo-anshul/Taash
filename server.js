@@ -13,6 +13,7 @@ var server = app.listen(port, function(){
 var io = require('socket.io')(server);
 
 var playersArray = [];
+var playerCount = 0;
 
 
 io.sockets.on('connection',
@@ -20,29 +21,52 @@ io.sockets.on('connection',
   function (socket) {
     console.log("We have a new client: " + socket.id);
 
-    var newPlayer = new playerClass.player(socket.id);
+    var newPlayer = new playerClass.player(socket.id,playersArray.length);
     playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id);
-    playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // playersArray.push(newPlayer);
 
-    console.log(playersArray.length);
+    console.log("playerCount is :"+playersArray.length);
 
-    if(playersArray.length >= 1){
+    if(playersArray.length >= 4){
       distributeCards();
     }
 
+    socket.emit('newClientConnect', playersArray.length);
+
+    socket.on('cardPlayed',
+      function(cardValue) {
+        console.log("socketr cardPlayed");
+        io.sockets.emit('cardPlayed',cardValue);
+      } 
+    );
+
     socket.on('disconnect', function() {
       console.log("Client Disconnected :" + socket.id);
+      removePlayer(socket.id);
     });
 
 
   }
 
 );
+
+function removePlayer(disconnectedSocketId){
+  
+  playerCount -= 1;
+  for(var index=0;index<playersArray.length;index++){
+      if(playersArray[index].socketId == disconnectedSocketId){
+          playersArray.splice(index,1);
+          break;
+     }
+  }
+  console.log(playersArray);
+}
+
 
 function distributeCards(){
     var cardsArray = [];
@@ -55,7 +79,7 @@ function distributeCards(){
     playersArray[1].cardArray = cardsArray.slice(13,26);
     playersArray[2].cardArray = cardsArray.slice(26,39);
     playersArray[3].cardArray = cardsArray.slice(39,52);
-    console.log(playersArray);
+
     io.sockets.emit('recievePlayerArray', playersArray);
 }
 

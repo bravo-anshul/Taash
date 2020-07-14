@@ -31,3 +31,42 @@ function getTableCardPosition(cardValue){
     }
     return new BABYLON.Vector3(x,y,z);
 }
+
+function getCardString(cardValue){
+    var color;
+    if(cardValue < 14){
+        x = "heartCardSkin";
+        color = "white";
+    }
+    else if(cardValue < 27){
+        cardValue = cardValue - 13;
+        x = "spadeCardSkin";
+        color = "white";
+    }
+    else if(cardValue < 40){
+        cardValue = cardValue - 26;
+        x = "clubCardSkin";
+        color = "red";
+    }
+    else if(cardValue < 53){
+        cardValue = cardValue - 39;
+        x = "diamondCardSkin";
+        color = "red";
+    }
+
+    if(cardValue == 1){
+        cardValue = "A";
+    }
+    else if(cardValue == 11){
+        cardValue = "J";
+    }
+    else if(cardValue == 12){
+        cardValue = "Q";
+    }
+    else if(cardValue == 13){
+        cardValue = "K";
+    }
+
+    var cardValues = {cardString: cardValue, skin : x, color : color};
+    return cardValues;
+}

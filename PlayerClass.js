@@ -1,6 +1,7 @@
 module.exports = {
-	player : function(socketId){
+	player : function(socketId, playerCount){
 		this.socketId = socketId;
+		this.playerCount = playerCount;
 		this.name;
 		this.cardArray = [];
 	}

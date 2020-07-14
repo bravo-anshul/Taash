@@ -3,6 +3,11 @@ var canvas = document.getElementById("renderCanvas");
 var engine = new BABYLON.Engine(canvas, true);
 var scene;
 
+var firstPlayerCardArray = [];
+var secondPlayerCardArray = [];
+var thirdPlayerCardArray = [];
+var fourthPlayerCardArray = [];
+
 var createScene = function(){
     
     scene = new BABYLON.Scene(engine);
@@ -61,14 +66,6 @@ var createScene = function(){
         yAxisRotation : 4
     }
 
-
-    var firstPlayerArray = [];
-    var secondPlayerArray = [];
-    var thirdPlayerArray = [];
-    var fourthPlayerArray = [];
-
-    var cardValue = 1;
-
     initilizeFirstPlayer();
     initilizeSecondPlayer();
     initilizeThirdPlayer();
@@ -76,16 +73,17 @@ var createScene = function(){
 
     async function Tutor1() {
         for(var i=0;i<13;i++){
-            firstPlayerArray[i].playAnimation();
+            firstPlayerCardArray[i].playStartAnimation();
             await sleep(150);
-            secondPlayerArray[i].playAnimation();
+            secondPlayerCardArray[i].playStartAnimation();
             await sleep(150);
-            thirdPlayerArray[i].playAnimation();
+            thirdPlayerCardArray[i].playStartAnimation();
             await sleep(150);
-            fourthPlayerArray[i].playAnimation();
+            fourthPlayerCardArray[i].playStartAnimation();
             await sleep(150);
          }
         
+
     }
 
     async function Tutor2() {
@@ -114,10 +112,15 @@ var createScene = function(){
     new cardMap("birdMap",1.0);
     new cardMap("birdMap",2.5);
 
+    //var demoCard = new CardClass();
+
     Tutor1();
     // Tutor2();
     // Tutor3();
     // Tutor4();
+
+
+
 
     function initilizeFirstPlayer(){
         for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
@@ -126,21 +129,21 @@ var createScene = function(){
                                         firstPlayerCardPosition.zAxis+z,
                                         firstPlayerCardPosition.yAxisRotation,
                                         1.5,playerArray[0].cardArray[i]);
-            firstPlayerArray.push(tempCard);
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+            firstPlayerCardArray.push(tempCard);
+            //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         }
     }
 
     function initilizeSecondPlayer(){
-        for(var i=0,y=1,yr=0.1,x=0,z=0;i<13;i++,z+=0.4,yr+=0.02,x+=0.1){
+        for(var i=0,y=0.4,yr=0.1,x=0,z=0;i<13;i++,z+=0.4,yr+=0.02,x+=0.1){
 
             var tempCard = new CardClass(secondPlayerCardPosition.xAxis+x,                         
                                         y,
                                         secondPlayerCardPosition.zAxis+z,
                                         secondPlayerCardPosition.yAxisRotation-yr,
                                         0.3,playerArray[1].cardArray[i]);
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
-            secondPlayerArray.push(tempCard);
+            //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+            secondPlayerCardArray.push(tempCard);
         }
     
     }
@@ -152,31 +155,27 @@ var createScene = function(){
                                         thirdPlayerCardPosition.zAxis+z,
                                         thirdPlayerCardPosition.yAxisRotation,
                                         0.2,playerArray[2].cardArray[i]);
-            thirdPlayerArray.push(tempCard);
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+            thirdPlayerCardArray.push(tempCard);
+            //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
             
         }
     }
 
     function initilizeFourthPlayer(){
-        for(var i=0,y=1,yr=0.01,x=0,z=0;i<13;i++,z+=0.4,yr+=0.05,x-=0.1){
+        for(var i=0,y=0.4,yr=0.01,x=0,z=0;i<13;i++,z+=0.4,yr+=0.05,x-=0.1){
             var tempCard = new CardClass(fourthPlayerCardPosition.xAxis+x,                         
                                         y,
                                         fourthPlayerCardPosition.zAxis+z,
                                         fourthPlayerCardPosition.yAxisRotation+yr,
                                         0.1,playerArray[3].cardArray[i]);
-            fourthPlayerArray.push(tempCard);
-            shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+            fourthPlayerCardArray.push(tempCard);
+            //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
             
         }
     }
 
     return scene;
 }
-
-
-
-window.addEventListener('resize', function(){ console.log("resize");engine.resize(); });
 
 function getPlant(){
     BABYLON.SceneLoader.Append("resources/plant/", "boxwood_plant.obj", scene, function (scene) {

@@ -13,8 +13,8 @@ var server = app.listen(port, function(){
 var io = require('socket.io')(server);
 
 var playersArray = [];
-var playerCount = 0;
-
+var cardsRestricitonArray = [];
+//  0 = heartTop , 1 = heartBottom, 2 = spade , 4 = club , 6 = diamond
 
 io.sockets.on('connection',
     
@@ -23,25 +23,29 @@ io.sockets.on('connection',
 
     var newPlayer = new playerClass.player(socket.id,playersArray.length);
     playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
     // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
     // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playerCount++);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
     // playersArray.push(newPlayer);
 
     console.log("playerCount is :"+playersArray.length);
 
     if(playersArray.length >= 4){
+
       distributeCards();
+      cardsRestricitonArray = [8,7,8,7,8,7,8,7];
+
     }
 
     socket.emit('newClientConnect', playersArray.length);
 
     socket.on('cardPlayed',
       function(cardValue) {
-        console.log("socketr cardPlayed");
-        io.sockets.emit('cardPlayed',cardValue);
+        if(checkIfCardPlayable(cardValue)){
+          io.sockets.emit('cardPlayed',cardValue.numericCardValue);
+        }
       } 
     );
 
@@ -55,16 +59,82 @@ io.sockets.on('connection',
 
 );
 
+function checkIfCardPlayable(cardValues){
+  
+  console.log(cardValues.value + " " + cardValues.skin + " : "+ cardValues.playerId);
+  
+  switch(cardValues.skin){
+    case "heartCardSkin": 
+      if(cardValues.value <= 7){
+        if(cardValues.value == (cardsRestricitonArray[0]-1)){
+          cardsRestricitonArray[0] = cardValues.value;
+          return true;
+        }
+      }
+      else if(cardsRestricitonArray[0] != 8){
+        if(cardValues.value == (cardsRestricitonArray[1]+1)){
+          cardsRestricitonArray[1] = cardValues.value;
+          return true;
+        }
+      }
+      break;
+    case "spadeCardSkin":
+      if(cardValues.value <= 7){
+        if(cardValues.value == (cardsRestricitonArray[2]-1)){
+          cardsRestricitonArray[2] = cardValues.value;
+          return true;
+        }
+      }
+      else if(cardsRestricitonArray[2] != 8){
+        if(cardValues.value == (cardsRestricitonArray[3]+1)){
+          cardsRestricitonArray[3] = cardValues.value;
+          return true;
+        }
+      }
+      break;
+    case "clubCardSkin": 
+      if(cardValues.value <= 7){
+        if(cardValues.value == (cardsRestricitonArray[4]-1)){
+          cardsRestricitonArray[4] = cardValues.value;
+          return true;
+        }
+      }
+      else if(cardsRestricitonArray[4] != 8){
+        if(cardValues.value == (cardsRestricitonArray[5]+1)){
+          cardsRestricitonArray[5] = cardValues.value;
+          return true;
+        }
+      }
+      break;
+    case "diamondCardSkin":
+      if(cardValues.value <= 7){
+        if(cardValues.value == (cardsRestricitonArray[6]-1)){
+          cardsRestricitonArray[6] = cardValues.value;
+          return true;
+        }
+      }
+      else if(cardsRestricitonArray[6] != 8){
+        if(cardValues.value == (cardsRestricitonArray[7]+1)){
+          cardsRestricitonArray[7] = cardValues.value;
+          return true;
+        }
+      }
+      break;
+
+  }
+  
+  return false;
+}
+
 function removePlayer(disconnectedSocketId){
   
-  playerCount -= 1;
   for(var index=0;index<playersArray.length;index++){
       if(playersArray[index].socketId == disconnectedSocketId){
           playersArray.splice(index,1);
           break;
      }
   }
-  console.log(playersArray);
+  console.log("playerCount is :"+playersArray.length);
 }
 
 

@@ -22,7 +22,7 @@ function activateEvents(){
     socket.on('recievePlayerArray', function(receivedPlayerArray){
         if(playerArray == null){
             console.log(receivedPlayerArray);
-            playerArray = shiftArrayToRight(receivedPlayerArray,playerId);
+            playerArray = arrayLeftShift(receivedPlayerArray,playerId);
             console.log(playerArray);
             scene = createScene();
             //scene.getEngine().setHardwareScalingLevel(0.5)
@@ -70,24 +70,9 @@ function activateEvents(){
 
 }
 
-function shiftArrayToRight(arr, places) {
-    for (var i = 0; i < places; i++) {
-        arr.unshift(arr.push());
-    }
+function arrayLeftShift(arr, num){
+    arr = arr.concat(arr.splice(0,num));
     return arr;
-}
-
-function setPlayerPosition(nums,k){
-    if(nums.length > k){
-        nums.unshift( ...nums.splice(-k));
-    } else {
-       let i = 0;
-        while(i < k){
-        nums.unshift(nums.splice(-1));
-        i++;
-        }
-    }
-    return nums;
 }
 
 function demoFunction(){

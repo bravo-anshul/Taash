@@ -17,9 +17,9 @@ var createScene = function(){
     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, -2, 1), scene);
     //light.position = new BABYLON.Vector3(9,4,2);
     light.intensity = 1;
-    var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, 20, 5), scene);
-    //light2.position = new BABYLON.Vector3(9,5,-1);
-    light2.intensity = 2;
+    // var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, 20, 5), scene);
+    // light2.position = new BABYLON.Vector3(9,5,-1);
+    // light2.intensity = 2;
     new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, 2, 0), scene);
 
     var cameraPosition = new BABYLON.Vector3(0,2,0);
@@ -83,7 +83,6 @@ var createScene = function(){
             await sleep(150);
          }
         
-
     }
 
     async function Tutor2() {
@@ -118,9 +117,6 @@ var createScene = function(){
     // Tutor2();
     // Tutor3();
     // Tutor4();
-
-
-
 
     function initilizeFirstPlayer(){
         for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
@@ -187,7 +183,6 @@ function getPlant(){
         scene.activeCamera.alpha += Math.PI;
     });
 }
-
 
 var elem = document.documentElement;
 function openFullscreen() {

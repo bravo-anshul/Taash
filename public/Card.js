@@ -5,6 +5,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     var cardOriginZ = 5;
 
     var cardValue = cValue;
+    var cardValues;
 
     var f = new BABYLON.Vector4(0.5,0, 1, 1); // front image = half the whole image along the width 
     var b = new BABYLON.Vector4(0,0, 0.5, 1); // back image = second half along the width     
@@ -26,8 +27,9 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     assignPlayAnimation();
 
     var playCard = function(){
-        playAnimationGroup.play(true);
-        socket.emit('cardPlayed', cardValue);
+        //playAnimationGroup.play(true);
+        console.log(cardValues);
+        socket.emit('cardPlayed',  getServerCardValue(cardValue));
     }
 
     card.actionManager = new BABYLON.ActionManager(scene);
@@ -182,7 +184,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         card.material = materialGround;
 
 
-        var cardValues = getCardString(cValue);
+        cardValues = getCardString(cValue);
         cValue = cardValues.cardString;
         var img = new Image();
         img.src = 'resources/cardSkin/diamondWhiteCardSkin.png';

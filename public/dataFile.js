@@ -11,7 +11,7 @@ function getTableCardPosition(cardValue){
 
     if(cardValue < 14){
         x = heartCardValue;
-        z = -0.5 + (cardValue * 0.5);
+        z = -0.7 + (cardValue * 0.5);
 
     }
     else if(cardValue < 27){
@@ -68,5 +68,27 @@ function getCardString(cardValue){
     }
 
     var cardValues = {cardString: cardValue, skin : x, color : color};
+    return cardValues;
+}
+
+function getServerCardValue(cardValue){
+    var numericCardValue = cardValue;
+    if(cardValue < 14){
+        x = "heartCardSkin";
+    }
+    else if(cardValue < 27){
+        cardValue = cardValue - 13;
+        x = "spadeCardSkin";
+    }
+    else if(cardValue < 40){
+        cardValue = cardValue - 26;
+        x = "clubCardSkin";
+    }
+    else if(cardValue < 53){
+        cardValue = cardValue - 39;
+        x = "diamondCardSkin";
+    }
+    var cardValues = {value: cardValue, skin : x, numericCardValue : numericCardValue, playerId : playerId};
+
     return cardValues;
 }

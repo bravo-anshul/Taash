@@ -33,9 +33,10 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     }
 
     card.actionManager = new BABYLON.ActionManager(scene);
-    card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
 
-   
+    //if(cardRotationAngle == firstPlayerCardPosition.yAxisRotation)
+        card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
+
     this.playStartAnimation = function(){
         assignPlayAnimation();
         startAnimationGroup.play(true);
@@ -195,7 +196,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
             textureGround.update();	
     
             //Add text to dynamic texture
-            var cornerFont = "80px cambria";
+            var cornerFont = "7vw cambria";
             textureGround.drawText(cValue, 60, 160, cornerFont, "black", null, true, true);
             textureGround.drawText(cValue, 500, 840, cornerFont, "black", null, true, true);
 

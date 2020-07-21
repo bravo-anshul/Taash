@@ -21,9 +21,7 @@ function activateEvents(){
 
     socket.on('recievePlayerArray', function(receivedPlayerArray){
         if(playerArray == null){
-            console.log(receivedPlayerArray);
             playerArray = arrayLeftShift(receivedPlayerArray,playerId);
-            console.log(playerArray);
             scene = createScene();
             //scene.getEngine().setHardwareScalingLevel(0.5)
             engine.runRenderLoop(function(){
@@ -51,19 +49,15 @@ function activateEvents(){
         }
 
         if(i == 0 ){
-            console.log(i+" : player played");
             firstPlayerCardArray[j].playReturnAnimation();
         }
         else if(i == 1 ){
-            console.log(i+" : player played");
             secondPlayerCardArray[j].playReturnAnimation();
         }
         else if(i == 2 ){
-            console.log(i+" : player played");
             thirdPlayerCardArray[j].playReturnAnimation();
         }
         else if(i == 3 ){
-            console.log(i+" : player played");
             fourthPlayerCardArray[j].playReturnAnimation();
         }
     });
@@ -77,6 +71,6 @@ function arrayLeftShift(arr, num){
 
 function demoFunction(){
     console.log("demoFunction");
-    socket.emit('cardPlayed', 34);
+    text1.text = "new";
 }
 

@@ -1,7 +1,6 @@
 var express = require('express');
 
 var playerClass = require('./PlayerClass.js');
-const { player } = require('./PlayerClass.js');
 
 var app = express();
 app.use(express.static('public'));
@@ -14,6 +13,7 @@ var io = require('socket.io')(server);
 
 var playersArray = [];
 var cardsRestricitonArray = [];
+var currentPlayerTurn;
 //  0 = heartTop , 1 = heartBottom, 2 = spade , 4 = club , 6 = diamond
 
 io.sockets.on('connection',
@@ -23,29 +23,30 @@ io.sockets.on('connection',
 
     var newPlayer = new playerClass.player(socket.id,playersArray.length);
     playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
 
     console.log("playerCount is :"+playersArray.length);
 
     if(playersArray.length >= 4){
 
       distributeCards();
+      setFirstPlayer();
       cardsRestricitonArray = [8,7,8,7,8,7,8,7];
-
+      console.log("cureent player :"+currentPlayerTurn);
     }
 
     socket.emit('newClientConnect', playersArray.length);
 
     socket.on('cardPlayed',
       function(cardValue) {
-        if(checkIfCardPlayable(cardValue)){
+        //if(checkIfCardPlayable(cardValue)){
           io.sockets.emit('cardPlayed',cardValue.numericCardValue);
-        }
+        //}
       } 
     );
 
@@ -58,6 +59,61 @@ io.sockets.on('connection',
   }
 
 );
+
+
+function removePlayer(disconnectedSocketId){
+  
+  for(var index=0;index<playersArray.length;index++){
+      if(playersArray[index].socketId == disconnectedSocketId){
+          playersArray.splice(index,1);
+          break;
+     }
+  }
+  console.log("playerCount is :"+playersArray.length);
+}
+
+
+function distributeCards(){
+    var cardsArray = [];
+    for(var i=1;i<53;i++){
+      cardsArray.push(i);
+    }
+    cardsArray = shuffleArray(cardsArray);
+    
+    playersArray[0].cardArray = cardsArray.slice(0,13);
+    playersArray[1].cardArray = cardsArray.slice(13,26);
+    playersArray[2].cardArray = cardsArray.slice(26,39);
+    playersArray[3].cardArray = cardsArray.slice(39,52);
+
+    io.sockets.emit('recievePlayerArray', playersArray);
+}
+
+
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
+function setFirstPlayer(){
+  var flag = false;
+  for(var i=0;i<4;i++){
+    for(var j=0;j<13;j++){
+      if(playersArray[i].cardArray[j] == 7){
+        currentPlayerTurn = i;
+        break;
+      }
+    }
+    if(flag)
+      break;
+  }
+}
+
 
 function checkIfCardPlayable(cardValues){
   
@@ -124,41 +180,4 @@ function checkIfCardPlayable(cardValues){
   }
   
   return false;
-}
-
-function removePlayer(disconnectedSocketId){
-  
-  for(var index=0;index<playersArray.length;index++){
-      if(playersArray[index].socketId == disconnectedSocketId){
-          playersArray.splice(index,1);
-          break;
-     }
-  }
-  console.log("playerCount is :"+playersArray.length);
-}
-
-
-function distributeCards(){
-    var cardsArray = [];
-    for(var i=1;i<53;i++){
-      cardsArray.push(i);
-    }
-    cardsArray = shuffleArray(cardsArray);
-    
-    playersArray[0].cardArray = cardsArray.slice(0,13);
-    playersArray[1].cardArray = cardsArray.slice(13,26);
-    playersArray[2].cardArray = cardsArray.slice(26,39);
-    playersArray[3].cardArray = cardsArray.slice(39,52);
-
-    io.sockets.emit('recievePlayerArray', playersArray);
-}
-
-function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
 }

@@ -3,6 +3,31 @@ var spadeCardValue = -0.5;
 var clubCardValue = 1.0;
 var diamondCardValue = 2.5;
 
+var firstPlayerCardPosition = {
+    xAxis : -3.7,
+    yAxis : 3,
+    zAxis : -1.8,
+    yAxisRotation : 0
+}      
+var secondPlayerCardPosition = {
+    xAxis : -7.5,
+    yAxis : 3,
+    zAxis : 1,
+    yAxisRotation : 2.2
+}
+var thirdPlayerCardPosition = {
+    xAxis : -3.5,
+    yAxis : 2.2,
+    zAxis : 7,
+    yAxisRotation : 3
+}
+var fourthPlayerCardPosition = {
+    xAxis : 7.5,
+    yAxis : 2.5,
+    zAxis : 1,
+    yAxisRotation : 4
+}
+
 function getTableCardPosition(cardValue){
 
     var x;

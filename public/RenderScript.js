@@ -8,6 +8,8 @@ var secondPlayerCardArray = [];
 var thirdPlayerCardArray = [];
 var fourthPlayerCardArray = [];
 
+var text1;
+
 var createScene = function(){
     
     scene = new BABYLON.Scene(engine);
@@ -40,31 +42,8 @@ var createScene = function(){
     shadowGenerator.blurKernel = 64;    
     
     //getPlant();
-
-    var firstPlayerCardPosition = {
-        xAxis : -3.7,
-        yAxis : 3,
-        zAxis : -1.8,
-        yAxisRotation : 0
-    }      
-    var secondPlayerCardPosition = {
-        xAxis : -7.5,
-        yAxis : 3,
-        zAxis : 1,
-        yAxisRotation : 2.2
-    }
-    var thirdPlayerCardPosition = {
-        xAxis : -3.5,
-        yAxis : 2.2,
-        zAxis : 7,
-        yAxisRotation : 3
-    }
-    var fourthPlayerCardPosition = {
-        xAxis : 7.5,
-        yAxis : 2.5,
-        zAxis : 1,
-        yAxisRotation : 4
-    }
+    getText();
+    
 
     initilizeFirstPlayer();
     initilizeSecondPlayer();
@@ -171,6 +150,41 @@ var createScene = function(){
     }
 
     return scene;
+}
+
+function getText(){
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    for(var i=0;i<4;i++){
+        
+    }
+
+    var text1 = new BABYLON.GUI.TextBlock();
+    text1.text = "Anshul - 100";
+    text1.color = "white";
+    text1.fontSize = "20vw";
+    text1.left = "2%";
+    text1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    advancedTexture.addControl(text1);    
+
+    text2 = new BABYLON.GUI.TextBlock();
+    text2.text = "Aashta - 190";
+    text2.color = "Black";
+    text2.fontSize = 24;
+    advancedTexture.addControl(text2);    
+
+    text3 = new BABYLON.GUI.TextBlock();
+    text3.text = "Bharat - 50" ;
+    text3.color = "Black";
+    text3.fontSize = 24;
+    advancedTexture.addControl(text3);    
+
+    text4 = new BABYLON.GUI.TextBlock();
+    text4.text = "Aashu - 40";
+    text4.color = "Black";
+    text4.fontSize = 24;
+    advancedTexture.addControl(text4);    
 }
 
 function getPlant(){

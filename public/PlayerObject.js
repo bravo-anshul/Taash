@@ -5,4 +5,5 @@ function PlayerObject(){
     this.score;
     this.textColor;
     this.isPlayable;
+    this.cardArray = [];
 }

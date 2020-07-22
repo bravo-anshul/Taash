@@ -12,6 +12,7 @@ var server = app.listen(port, function(){
 var io = require('socket.io')(server);
 
 var playersArray = [];
+var playersNameArray = [];
 var cardsRestricitonArray = [];
 var currentPlayerTurn;
 //  0 = heartTop , 1 = heartBottom, 2 = spade , 4 = club , 6 = diamond
@@ -23,17 +24,16 @@ io.sockets.on('connection',
 
     var newPlayer = new playerClass.player(socket.id,playersArray.length);
     playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
 
     console.log("playerCount is :"+playersArray.length);
 
     if(playersArray.length >= 4){
-
       distributeCards();
       setFirstPlayer();
       cardsRestricitonArray = [8,7,8,7,8,7,8,7];
@@ -49,6 +49,18 @@ io.sockets.on('connection',
         //}
       } 
     );
+
+    socket.on('addPlayerName', function(countId, playerName){
+        playersArray.forEach(function(player){
+            if(player.playerCount == countId){
+              player.name = playerName;
+            }
+        });
+        playersNameArray.push(playerName);
+        //io.sockets.emit("writePlayerNames",{playerId : countId, playerName : playerName});
+        io.sockets.emit("writePlayerNames",playersNameArray);
+        
+    });
 
     socket.on('disconnect', function() {
       console.log("Client Disconnected :" + socket.id);

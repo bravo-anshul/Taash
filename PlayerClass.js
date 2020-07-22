@@ -4,5 +4,6 @@ module.exports = {
 		this.playerCount = playerCount;
 		this.name;
 		this.cardArray = [];
+		this.score = 0;
 	}
 };

@@ -12,7 +12,43 @@
                 margin: 0;
                 padding: 0;
             }
+            h1{
+                font-size: 155%;
 
+            }
+            hr{
+                border : 1px dashed black;
+            }
+            
+            .divBox{
+                position: absolute;
+                left:25%;
+                top:20%;
+                z-index:5;
+                width: 50%;
+                border : 2px dotted black;
+                border-radius: 30px 30px 0px 0px;
+                text-align:center;
+            }
+            
+            #nameInput{
+                margin : 20px;
+                border : 2px solid black;
+                border-radius: 10px;
+                padding:5px;
+                font-size: 15px;
+                background:transparent;
+            }
+
+            #playButton{
+                margin : 20px;
+                border : 2px dashed #009688;
+                border-radius: 10px;
+                padding:5px 15px;
+                font-size: 15px;
+                color:white;
+                background:#009688;
+            }
             #renderCanvas {
                 width: 100%;
                 height: 100%;
@@ -36,8 +72,14 @@
     </head>
 
    <body onload="initialize()">
+    <div id="welcomeDialog" class="divBox">
+		<h1> Catch-THE-Match</h1>
+		<hr></hr>
+		<input id="nameInput" minlength="4" maxlength="8" placeholder="Please enter your name."></input>
+		<button type="submit" id="playButton" onclick="addPlayerName()"> Start </button>
+	</div>
     <!-- <button onclick="openFullscreen();">Open Fullscreen</button> -->
-    <!-- <button onclick="demoFunction();">demoFunction</button> -->
+    <button onclick="demoFunction();">demoFunction</button>
     <canvas id="renderCanvas" ></canvas>
     <script type="text/javascript" src="ClientScript.js"></script>
     <script type="text/javascript" src="RenderScript.js"></script>

@@ -59,6 +59,7 @@ function getTableCardPosition(cardValue){
 
 function getCardString(cardValue){
     var color;
+    x = "red";
     if(cardValue < 14){
         x = "heartCardSkin";
         color = "white";

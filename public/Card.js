@@ -28,8 +28,8 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     var playCard = function(){
         //playAnimationGroup.play(true);
-        console.log(cardValues);
-        socket.emit('cardPlayed',  getServerCardValue(cardValue));
+        console.log(cardValue);
+        socket.emit('playerMove',  getServerCardValue(cardValue));
     }
 
     card.actionManager = new BABYLON.ActionManager(scene);
@@ -39,16 +39,32 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     this.playStartAnimation = function(){
         assignPlayAnimation();
-        startAnimationGroup.play(true);
+        startAnimationGroup.play(false);
     };
 
     this.playReturnAnimation = function(){
-        playAnimationGroup.play(true);
+        playAnimationGroup.play(false);
+    }
+
+    this.disposeMesh = function(){
+        card.dispose();
+    }
+
+    this.updateCardValues = function(v){
+        cardValue = v;
+        cValue = v;
+        card.rotation.x = -1.57;
+        card.rotation.y = 0;
+        card.position = new BABYLON.Vector3(cardOriginX,yAxis,cardOriginZ);
+        assignPlayAnimation();
+        setNewMaterial();
     }
 
     this.getCard = function(){
         return card;
     }
+
+    
 
     //////////////////////////////////////////////////////// end of class ///////////////////////////////////////////////////////////////////
 
@@ -171,10 +187,13 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
 
     }
+    
+    var textureGround;
+    
 
     function setMaterial(){
         
-        var textureGround = new BABYLON.DynamicTexture("dynamic texture", {width:1234,height:1000}, scene);   
+        textureGround = new BABYLON.DynamicTexture("dynamic texture", {width:1234,height:1000}, scene);   
         var textureContext = textureGround.getContext();
         
         var materialGround = new BABYLON.StandardMaterial("Mat", scene);    				
@@ -187,39 +206,26 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
         cardValues = getCardString(cValue);
         cValue = cardValues.cardString;
-        var img = new Image();
-        img.src = 'resources/cardSkin/diamondWhiteCardSkin.png';
-        //img.src = 'resources/cardSkin/'+cardValues.skin+'.png';
-        img.onload = function() {
-            //Add image to dynamic texture
-            textureContext.drawImage(this, 0,0);
-            textureGround.update();	
-    
-            //Add text to dynamic texture
-            var cornerFont = "7vw cambria";
-            textureGround.drawText(cValue, 60, 160, cornerFont, "black", null, true, true);
-            textureGround.drawText(cValue, 500, 840, cornerFont, "black", null, true, true);
+        
+        setNewMaterial();
+    }
 
-            var middleFont = "200px cambria";
-            textureGround.drawText(cValue, 250, 560, middleFont, "black", null, true, true);
-        }	
+    function setNewMaterial(){
+        cardValues = getCardString(cValue);
+        cValue = cardValues.cardString;
+        textureGround.getContext().drawImage(img, 0,0);
+        var cornerFont = "7vw cambria";
+        textureGround.drawText(cValue, 60, 160, cornerFont, "black", null, true, true);
+        textureGround.drawText(cValue, 500, 840, cornerFont, "black", null, true, true);
 
-        // var mat = new BABYLON.StandardMaterial("", scene);
-        // mat.diffuseTexture = new BABYLON.Texture("resources/blackCard2.png", scene);
-        // mat.specularColor = new BABYLON.Color3(0,0,0);
-        // mat.diffuseTexture.hasAlpha = true;
-        // card.material = mat;
+        var middleFont = "200px cambria";
+        textureGround.drawText(cValue, 250, 560, middleFont, "black", null, true, true);
+        textureGround.update();
+        
     }
     
 }
 
-function assignActionManager(mesh){
-    mesh.actionManager = new BABYLON.ActionManager(scene);
-    mesh.actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOutTrigger, mesh.material, "emissiveColor", mesh.material.emissiveColor));
-    mesh.actionManager.registerAction(new BABYLON.SetValueAction(BABYLON.ActionManager.OnPointerOverTrigger, mesh.material, "emissiveColor", BABYLON.Color3.White()));
-    mesh.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOutTrigger, mesh, "scaling", new BABYLON.Vector3(1, 1, 1), 150));
-    mesh.actionManager.registerAction(new BABYLON.InterpolateValueAction(BABYLON.ActionManager.OnPointerOverTrigger, mesh, "scaling", new BABYLON.Vector3(1.1, 1.1, 1.1), 150));
-}
 
 function onClickAction(mesh){
     mesh.actionManager = new BABYLON.ActionManager(scene);
@@ -241,6 +247,3 @@ function getXAxisRotationIncrementValue(startingXAngle,endingAngle){
     return difference;
 }
 
-function onConsole(cardValue){
-    console.log(cardValue + "on console");
-}

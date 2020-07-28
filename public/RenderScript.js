@@ -9,6 +9,8 @@ var thirdPlayerCardArray = [];
 var fourthPlayerCardArray = [];
 
 var playerNameArray = [];
+var img = new Image();
+img.src = 'resources/cardSkin/diamondWhiteCardSkin.png';
 
 
 var createScene = function(){
@@ -55,7 +57,7 @@ var createScene = function(){
 
     async function Tutor2() {
         for(var i=0;i<13;i++){
-            secondPlayerArray[i].playAnimation();
+            firstPlayerCardArray[i].playAnimation();
             await sleep(200);
         }
         
@@ -91,7 +93,7 @@ var createScene = function(){
     return scene;
 }
 
-function getText(playersNameArray){
+function getText(){
     var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
     for(var j=0,i=6;i<30;j++,i+=6){
@@ -111,12 +113,13 @@ function getText(playersNameArray){
 }
 
 function writePlayerName(nameData){
-    console.log(nameData);
     for(var i = 0;i<4;i++){
         if(nameData[i] != null){
             playerNameArray[i].text = nameData[i]+" - 0";
         }
     }
+    if(nameData.length == 4)
+        Tutor1();
     
 }
 
@@ -175,13 +178,13 @@ function initilizeFourthPlayer(){
 async function Tutor1() {
     for(var i=0;i<13;i++){
         firstPlayerCardArray[i].playStartAnimation();
-        await sleep(150);
+        //await sleep(150);
         secondPlayerCardArray[i].playStartAnimation();
-        await sleep(150);
+        //await sleep(150);
         thirdPlayerCardArray[i].playStartAnimation();
-        await sleep(150);
+        //await sleep(150);
         fourthPlayerCardArray[i].playStartAnimation();
-        await sleep(150);
+        //await sleep(150);
      }
     
 }
@@ -210,15 +213,23 @@ function openFullscreen() {
     }
     engine.resize();
 }
+
+async function sleepFor(millisecond){
+    await sleep(millisecond);
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
 scene = createScene();
+scene.clearCachedVertexData();
+scene.cleanCachedTextureBuffer();
 //scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
 });
+engine.doNotHandleContextLost = true;
 getText();
 

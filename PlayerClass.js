@@ -5,5 +5,6 @@ module.exports = {
 		this.name;
 		this.cardArray = [];
 		this.score = 0;
+		this.cardPlayed = 0;
 	}
 };

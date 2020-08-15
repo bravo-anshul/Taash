@@ -65,20 +65,19 @@
         <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
         <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script type="text/javascript" src="dataFile.js"></script>
-        <script type="text/javascript" src="Card.js"></script>
         <script type="text/javascript" src="CardMap.js"></script>
-        
-        
+        <script type="text/javascript" src="Card.js"></script>
+        <script type="text/javascript" src="Camera.js"></script>
     </head>
 
    <body onload="initialize()">
-    <div id="welcomeDialog" class="divBox">
-		<h1> Catch-THE-Match</h1>
-		<hr></hr>
-		<input id="nameInput" minlength="4" maxlength="8" placeholder="Please enter your name."></input>
-		<button type="submit" id="playButton" onclick="addPlayerName()"> Start </button>
-	</div>
-    <!-- <button onclick="openFullscreen();">Open Fullscreen</button> -->
+    <!-- <div id="welcomeDialog" class="divBox">
+        <h1> Catch-THE-Match</h1>
+        <hr></hr>
+        <input id="nameInput" minlength="4" maxlength="8" placeholder="Please enter your name."></input>
+        <button type="submit" id="playButton" onclick="addPlayerName()"> Start </button>
+    </div> -->
+    <button onclick="openFullscreen();">Open Fullscreen</button>
     <button onclick="demoFunction();">demoFunction</button>
     <button onclick="demoFunction2();">demoFunction2</button>
     <canvas id="renderCanvas" ></canvas>

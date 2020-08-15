@@ -3,6 +3,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     var cardOriginX = 3;
     var cardOriginZ = 5;
+    var cardPlayed = false;
 
     var cardValue = cValue;
     var cardValues;
@@ -18,7 +19,6 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     // card.rotation.x = 1.27;
     // card.position = new BABYLON.Vector3(0,5,-4);
 
-
     setMaterial();
 
     var startAnimationGroup = new BABYLON.AnimationGroup("Group");
@@ -27,15 +27,13 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     assignPlayAnimation();
 
     var playCard = function(){
-        //playAnimationGroup.play(true);
-        console.log(cardValue);
-        socket.emit('playerMove',  getServerCardValue(cardValue));
+        playCardFunction();
     }
 
     card.actionManager = new BABYLON.ActionManager(scene);
 
     //if(cardRotationAngle == firstPlayerCardPosition.yAxisRotation)
-        card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
+    card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
 
     this.playStartAnimation = function(){
         assignPlayAnimation();
@@ -50,21 +48,28 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         card.dispose();
     }
 
-    this.updateCardValues = function(v){
-        cardValue = v;
-        cValue = v;
+    this.updateCardValues = function(updatedCardValue){
+        cardPlayed = false;
+        cardValue = updatedCardValue;
         card.rotation.x = -1.57;
         card.rotation.y = 0;
         card.position = new BABYLON.Vector3(cardOriginX,yAxis,cardOriginZ);
         assignPlayAnimation();
         setNewMaterial();
+        card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
     }
 
     this.getCard = function(){
         return card;
     }
 
-    
+    function playCardFunction(){
+        //if(checkIfCardPlayable(getServerCardValue(cardValue))){
+            cardPlayed = true;
+            console.log("inside if ");
+            socket.emit('playerMove',  getServerCardValue(cardValue));
+        //}
+    } 
 
     //////////////////////////////////////////////////////// end of class ///////////////////////////////////////////////////////////////////
 
@@ -188,13 +193,12 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     }
     
+            
     var textureGround;
-    
+
 
     function setMaterial(){
-        
         textureGround = new BABYLON.DynamicTexture("dynamic texture", {width:1234,height:1000}, scene);   
-        var textureContext = textureGround.getContext();
         
         var materialGround = new BABYLON.StandardMaterial("Mat", scene);    				
         materialGround.diffuseTexture = textureGround;
@@ -204,24 +208,20 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         card.material = materialGround;
 
 
-        cardValues = getCardString(cValue);
-        cValue = cardValues.cardString;
-        
+        cardValues = getCardString(cardValue);
         setNewMaterial();
     }
 
     function setNewMaterial(){
-        cardValues = getCardString(cValue);
-        cValue = cardValues.cardString;
-        textureGround.getContext().drawImage(img, 0,0);
+        cardValues = getCardString(cardValue);
+        textureGround.getContext().drawImage(cardValues.cardImage, 0,0);
         var cornerFont = "7vw cambria";
-        textureGround.drawText(cValue, 60, 160, cornerFont, "black", null, true, true);
-        textureGround.drawText(cValue, 500, 840, cornerFont, "black", null, true, true);
+        textureGround.drawText(cardValues.cardString, 60, 160, cornerFont, cardValues.color, null, true, true);
+        textureGround.drawText(cardValues.cardString, 500, 840, cornerFont, cardValues.color, null, true, true);
 
         var middleFont = "200px cambria";
-        textureGround.drawText(cValue, 250, 560, middleFont, "black", null, true, true);
+        textureGround.drawText(cardValues.cardString, 250, 560, middleFont, cardValues.color, null, true, true);
         textureGround.update();
-        
     }
     
 }

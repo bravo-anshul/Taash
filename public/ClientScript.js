@@ -2,9 +2,9 @@ var socket;
 
 var playerArray;
 var playerId;
+var currentPlayerTurn;
 
 var playerObjectArray = [];
-var cardsRestricitonArray = [];
 
 function initialize() {
   connectSocket();
@@ -24,13 +24,7 @@ function activateEvents() {
   });
 
   socket.on('recievePlayerArray', function (receivedPlayerArray) {
-    if (playerArray == null) {
-      playerArray = arrayLeftShift(receivedPlayerArray, playerId);
-      initializeCards();
-    }
-    else{
-      resetCards();
-    }
+    receivePlayerArray(receivedPlayerArray);
   });
 
   socket.on('writePlayerNames', function (nameData) {
@@ -51,17 +45,32 @@ function activateEvents() {
 
 }
 
+function receivePlayerArray(receivedPlayerArray){
+  console.log(receivedPlayerArray);
+    if (playerArray == null) {
+      playerArray = arrayLeftShift(receivedPlayerArray, playerId);
+      initializeCards();
+    }
+    else{
+      playerArray = arrayLeftShift(receivedPlayerArray, playerId);
+      resetCards();
+    }
+}
+
 function playerMove(moveData) {
   updateText(moveData.playerTurn);
+  checkIfLastCardPlayed(moveData.lastCardPlayed);
   cardsRestricitonArray = moveData.cardsRestricitonArray;
   if (moveData.playerTurn == playerId) {
-    if (!checkIfAnyCardPlayable()) {
+    if (!checkIfAnyCardPlayable())  {
       console.log("playerSkipped");
       socket.emit('playerMove', { cardValue: 0, playerId : playerId });
     }
   }
-  if (moveData.cardValue != 0)
+  if (moveData.cardValue != 0){
     playCard(moveData.cardValue);
+  }
+  
 }
 
 function updateText(currentPlayerTurn) {
@@ -73,74 +82,25 @@ function updateText(currentPlayerTurn) {
   }
 }
 
+function checkIfLastCardPlayed(lastCardPlayed){
+  if(lastCardPlayed){
+    currentPlayerTurn = 99;
+    console.log("GAME OVER");
+    giveRemainingCardCount();
+  }
+}
+
 function checkIfAnyCardPlayable() {
   var isPlayable = false;
   playerArray[0].cardArray.forEach(cardValue => {
 
     if (checkIfCardPlayable(getServerCardValue(cardValue))){
       //cardToPlay = getServerCardValue(cardValue);
-      
       socket.emit('playerMove',getServerCardValue(cardValue));
       isPlayable = true;
     }
   });
   return isPlayable;
-}
-
-function checkIfCardPlayable(cardValues) {
-  switch (cardValues.skin) {
-    case "heartCardSkin":
-      if (cardValues.value <= 7) {
-        if (cardValues.value == (cardsRestricitonArray[0] - 1)) {
-          return true;
-        }
-      }
-      else if (cardsRestricitonArray[0] != 8) {
-        if (cardValues.value == (cardsRestricitonArray[1] + 1)) {
-          return true;
-        }
-      }
-      break;
-    case "spadeCardSkin":
-      if (cardValues.value <= 7) {
-        if (cardValues.value == (cardsRestricitonArray[2] - 1)) {
-          return true;
-        }
-      }
-      else if (cardsRestricitonArray[2] != 8) {
-        if (cardValues.value == (cardsRestricitonArray[3] + 1)) {
-          return true;
-        }
-      }
-      break;
-    case "clubCardSkin":
-      if (cardValues.value <= 7) {
-        if (cardValues.value == (cardsRestricitonArray[4] - 1)) {
-          return true;
-        }
-      }
-      else if (cardsRestricitonArray[4] != 8) {
-        if (cardValues.value == (cardsRestricitonArray[5] + 1)) {
-          return true;
-        }
-      }
-      break;
-    case "diamondCardSkin":
-      if (cardValues.value <= 7) {
-        if (cardValues.value == (cardsRestricitonArray[6] - 1)) {
-          return true;
-        }
-      }
-      else if (cardsRestricitonArray[6] != 8) {
-        if (cardValues.value == (cardsRestricitonArray[7] + 1)) {
-          return true;
-        }
-      }
-      break;
-
-  }
-
-  return false;
 }
 
 function addPlayerName() {
@@ -186,6 +146,8 @@ function playCard(cardValue) {
 
 function arrayLeftShift(arr, num) {
   arr = arr.concat(arr.splice(0, num));
+  arr[0].cardArray = arr[0].cardArray.sort();
+  console.log(arr[0].cardArray);
   return arr;
 }
 
@@ -207,20 +169,32 @@ function initializeCards() {
   initilizeFourthPlayer();
 }
 
+function giveRemainingCardCount(){
+  var points = 0;
+  firstPlayerCardArray.forEach(function(card){
+    if(card.cardPlayed == false){
+      points += getCardPlayingValue(card.cardValue);
+    }
+  });
+  console.log(points);
+  socket.emit('getRemainingCardCount',{playerId : playerId,  points : points});
+}
+
 function demoFunction() {
   console.log("demoFunction");
 
-  //Tutor1();
-  var count = 1;
-  for(var i=0;i<13;i++){
-    firstPlayerCardArray[i].updateCardValues(count++);
-    secondPlayerCardArray[i].updateCardValues(count++);
-    thirdPlayerCardArray[i].updateCardValues(count++);
-    fourthPlayerCardArray[i].updateCardValues(count++);
-  }
+  Tutor1();
+  // var count = 1;
+  // for(var i=0;i<13;i++){
+  //   firstPlayerCardArray[i].updateCardValues(count++);
+  //   secondPlayerCardArray[i].updateCardValues(count++);
+  //   thirdPlayerCardArray[i].updateCardValues(count++);
+  //   fourthPlayerCardArray[i].updateCardValues(count++);
+  // }
 }
 
 function demoFunction2(){
+  cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
   socket.emit('restartGame');
 }
 

@@ -2,6 +2,7 @@ var canvas = document.getElementById("renderCanvas");
 
 var engine = new BABYLON.Engine(canvas, true);
 var scene;
+var shadowGenerator;
 
 var firstPlayerCardArray = [];
 var secondPlayerCardArray = [];
@@ -9,8 +10,6 @@ var thirdPlayerCardArray = [];
 var fourthPlayerCardArray = [];
 
 var playerNameArray = [];
-var img = new Image();
-img.src = 'resources/cardSkin/diamondWhiteCardSkin.png';
 
 
 var createScene = function(){
@@ -29,7 +28,11 @@ var createScene = function(){
 
     var cameraPosition = new BABYLON.Vector3(0,2,0);
     var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
-    camera.attachControl(canvas, true);
+    camera.target = new BABYLON.Vector3(-0.5,0.1,2.5);
+    camera.alpha = -Math.PI / 1.98;
+    
+    //var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.3, 8, cameraPosition, scene);
+    //camera.attachControl(canvas, true);
     
     var ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 100, width: 100, subdivisions: 1}, scene);    
     var material = new BABYLON.StandardMaterial("myMaterial", scene);
@@ -39,15 +42,11 @@ var createScene = function(){
     ground.position.y = 0;
     ground.receiveShadows = true;
 
-    var shadowGenerator = new BABYLON.ShadowGenerator(700, light);
+    shadowGenerator = new BABYLON.ShadowGenerator(700, light);
     shadowGenerator.useBlurExponentialShadowMap = true;
     shadowGenerator.useKernelBlur = true;
     shadowGenerator.blurKernel = 64;    
     
-    //getPlant();
-    
-    
-
     // initilizeFirstPlayer();
     // initilizeSecondPlayer();
     // initilizeThirdPlayer();
@@ -88,14 +87,13 @@ var createScene = function(){
     // Tutor3();
     // Tutor4();
 
-    
-
     return scene;
 }
 
-function getText(){
-    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+var advancedTexture ;
 
+function getText(){
+    advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
     for(var j=0,i=6;i<30;j++,i+=6){
         var text1 = new BABYLON.GUI.TextBlock();
         text1.text = "";
@@ -107,9 +105,22 @@ function getText(){
         text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
         advancedTexture.addControl(text1);    
         playerNameArray.push(text1);
-    }
+    }  
+}
 
-    
+function getZoomImage(){
+    console.log("image");
+    var zoomImage = new BABYLON.GUI.Image("but", "resources/vision.png");
+    zoomImage.width = "10%";
+    zoomImage.height = "140px";
+    zoomImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    zoomImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    zoomImage.paddingBottom = "5%";
+    zoomImage.paddingRight = "2%";
+    advancedTexture.addControl(zoomImage);
+    zoomImage.onPointerDownObservable.add(()=>{
+        changeCamera();
+    });
 }
 
 function writePlayerName(nameData){
@@ -120,7 +131,14 @@ function writePlayerName(nameData){
     }
     if(nameData.length == 4)
         Tutor1();
-    
+}
+
+function writeScore(scoreData){
+    for(var i = 0;i<4;i++){
+        if(nameData[i] != null){
+            playerNameArray[i].text = nameData[i]+" - "+playerArray[i].score;
+        }
+    }
 }
 
 function initilizeFirstPlayer(){
@@ -146,7 +164,6 @@ function initilizeSecondPlayer(){
         //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         secondPlayerCardArray.push(tempCard);
     }
-
 }
 
 function initilizeThirdPlayer(){
@@ -186,7 +203,6 @@ async function Tutor1() {
         fourthPlayerCardArray[i].playStartAnimation();
         //await sleep(150);
      }
-    
 }
 
 function getPlant(){
@@ -226,10 +242,11 @@ function sleep(ms) {
 scene = createScene();
 scene.clearCachedVertexData();
 scene.cleanCachedTextureBuffer();
-//scene.getEngine().setHardwareScalingLevel(0.5)
+getText();
+getZoomImage();
+
+scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
 });
 engine.doNotHandleContextLost = true;
-getText();
-

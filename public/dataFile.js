@@ -1,7 +1,12 @@
+var downCameraPosition = new BABYLON.Vector3(0.6,7.5,-5.7);
+var upCameraPosition = new BABYLON.Vector3(0,9,0);
+
 var heartCardValue = -2.0;
 var spadeCardValue = -0.5;
 var clubCardValue = 1.0;
 var diamondCardValue = 2.5;
+
+var cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
 
 var firstPlayerCardPosition = {
     xAxis : -3.7,
@@ -27,6 +32,15 @@ var fourthPlayerCardPosition = {
     zAxis : 1,
     yAxisRotation : 4
 }
+
+var diamondImage = new Image();
+diamondImage.src = 'resources/cardSkin/diamondWhiteBlackCardSkin.png';
+var heartImage = new Image();
+heartImage.src = 'resources/cardSkin/heartWhiteBlackCardSkin.png';
+var spadeImage = new Image();
+spadeImage.src = 'resources/cardSkin/spadeWhiteBlackCardSkin.png';
+var clubImage = new Image();
+clubImage.src = 'resources/cardSkin/clubWhiteBlackCardSkin.png';
 
 function getTableCardPosition(cardValue){
 
@@ -59,25 +73,30 @@ function getTableCardPosition(cardValue){
 
 function getCardString(cardValue){
     var color;
-    x = "red";
+    var x;
+    var cardImage;
     if(cardValue < 14){
         x = "heartCardSkin";
-        color = "white";
+        color = "black";
+        cardImage = heartImage;
     }
     else if(cardValue < 27){
         cardValue = cardValue - 13;
         x = "spadeCardSkin";
-        color = "white";
+        color = "black";
+        cardImage = spadeImage;
     }
     else if(cardValue < 40){
         cardValue = cardValue - 26;
         x = "clubCardSkin";
-        color = "red";
+        color = "black";
+        cardImage = clubImage;
     }
-    else if(cardValue < 53){
+    else{
         cardValue = cardValue - 39;
         x = "diamondCardSkin";
-        color = "red";
+        color = "black";
+        cardImage = diamondImage;
     }
 
     if(cardValue == 1){
@@ -93,7 +112,7 @@ function getCardString(cardValue){
         cardValue = "K";
     }
 
-    var cardValues = {cardString: cardValue, skin : x, color : color};
+    var cardValues = {cardString: cardValue, skin : x, color : color, cardImage : cardImage};
     return cardValues;
 }
 
@@ -118,3 +137,76 @@ function getServerCardValue(cardValue){
 
     return cardValues;
 }
+
+function getCardPlayingValue(numericCardValue){
+  if(numericCardValue < 14){
+  }
+  else if(numericCardValue < 27){
+    numericCardValue = numericCardValue - 13;
+  }
+  else if(numericCardValue < 40){
+    numericCardValue = numericCardValue - 26;
+  }
+  else if(numericCardValue < 53){
+    numericCardValue = numericCardValue - 39;
+  }
+
+  return numericCardValue;
+}
+
+function checkIfCardPlayable(cardValues) {
+    console.log(cardValues);
+    switch (cardValues.skin) {
+      case "heartCardSkin":
+        if (cardValues.value <= 7) {
+          if (cardValues.value == (cardsRestricitonArray[0] - 1)) {
+            return true;
+          }
+        }
+        else if (cardsRestricitonArray[0] != 8) {
+          if (cardValues.value == (cardsRestricitonArray[1] + 1)) {
+            return true;
+          }
+        }
+        break;
+      case "spadeCardSkin":
+        if (cardValues.value <= 7) {
+          if (cardValues.value == (cardsRestricitonArray[2] - 1)) {
+            return true;
+          }
+        }
+        else if (cardsRestricitonArray[2] != 8) {
+          if (cardValues.value == (cardsRestricitonArray[3] + 1)) {
+            return true;
+          }
+        }
+        break;
+      case "clubCardSkin":
+        if (cardValues.value <= 7) {
+          if (cardValues.value == (cardsRestricitonArray[4] - 1)) {
+            return true;
+          }
+        }
+        else if (cardsRestricitonArray[4] != 8) {
+          if (cardValues.value == (cardsRestricitonArray[5] + 1)) {
+            return true;
+          }
+        }
+        break;
+      case "diamondCardSkin":
+        if (cardValues.value <= 7) {
+          if (cardValues.value == (cardsRestricitonArray[6] - 1)) {
+            return true;
+          }
+        }
+        else if (cardsRestricitonArray[6] != 8) {
+          if (cardValues.value == (cardsRestricitonArray[7] + 1)) {
+            return true;
+          }
+        }
+        break;
+  
+    }
+  
+    return false;
+  }

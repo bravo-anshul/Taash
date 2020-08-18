@@ -43,6 +43,10 @@ function activateEvents() {
     playCard(cardValue);
   });
 
+  socket.on('updateScore', function(scoreData){
+    writeScore(scoreData);
+  });
+
 }
 
 function receivePlayerArray(receivedPlayerArray){
@@ -84,7 +88,6 @@ function updateText(currentPlayerTurn) {
 
 function checkIfLastCardPlayed(lastCardPlayed){
   if(lastCardPlayed){
-    currentPlayerTurn = 99;
     console.log("GAME OVER");
     giveRemainingCardCount();
   }
@@ -92,11 +95,12 @@ function checkIfLastCardPlayed(lastCardPlayed){
 
 function checkIfAnyCardPlayable() {
   var isPlayable = false;
-  playerArray[0].cardArray.forEach(cardValue => {
 
-    if (checkIfCardPlayable(getServerCardValue(cardValue))){
+  firstPlayerCardArray.forEach(function(card){
+
+    if (checkIfCardPlayable(getServerCardValue(card.getCardValue()))){
       //cardToPlay = getServerCardValue(cardValue);
-      socket.emit('playerMove',getServerCardValue(cardValue));
+      card.playCardTemp();
       isPlayable = true;
     }
   });
@@ -110,6 +114,7 @@ function addPlayerName() {
     return;
   }
   document.getElementById("welcomeDialog").style.display = 'none';
+  document.getElementById('playerNameText').innerHTML = playerName+" "+playerId;
   socket.emit('addPlayerName', playerId, playerName);
 }
 
@@ -172,8 +177,10 @@ function initializeCards() {
 function giveRemainingCardCount(){
   var points = 0;
   firstPlayerCardArray.forEach(function(card){
-    if(card.cardPlayed == false){
-      points += getCardPlayingValue(card.cardValue);
+    console.log(card.getCardPlayedBoolean());
+    if(card.getCardPlayedBoolean() == false){
+      points += getCardPlayingValue(card.getCardValue());
+      console.log(card.getCardValue());
     }
   });
   console.log(points);

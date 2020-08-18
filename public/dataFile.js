@@ -155,7 +155,6 @@ function getCardPlayingValue(numericCardValue){
 }
 
 function checkIfCardPlayable(cardValues) {
-    console.log(cardValues);
     switch (cardValues.skin) {
       case "heartCardSkin":
         if (cardValues.value <= 7) {

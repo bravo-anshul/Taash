@@ -59,8 +59,20 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
     }
 
+    this.getCardPlayedBoolean = function(){
+        return cardPlayed;
+    }
+
+    this.getCardValue = function(){
+        return cardValue;
+    }
+
     this.getCard = function(){
         return card;
+    }
+
+    this.playCardTemp = function(){
+        playCardFunction();
     }
 
     function playCardFunction(){

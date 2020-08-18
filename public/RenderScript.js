@@ -10,6 +10,7 @@ var thirdPlayerCardArray = [];
 var fourthPlayerCardArray = [];
 
 var playerNameArray = [];
+var nameData;
 
 
 var createScene = function(){
@@ -123,22 +124,24 @@ function getZoomImage(){
     });
 }
 
-function writePlayerName(nameData){
+function writePlayerName(recievedNameData){
+    nameData = recievedNameData;
     for(var i = 0;i<4;i++){
-        if(nameData[i] != null){
-            playerNameArray[i].text = nameData[i]+" - 0";
+        if(recievedNameData[i] != null){
+            playerNameArray[i].text = recievedNameData[i]+" - 0";
         }
     }
-    if(nameData.length == 4)
+    if(recievedNameData.length == 4)
         Tutor1();
 }
 
 function writeScore(scoreData){
-    for(var i = 0;i<4;i++){
-        if(nameData[i] != null){
-            playerNameArray[i].text = nameData[i]+" - "+playerArray[i].score;
-        }
-    }
+    // for(var i = 0;i<4;i++){
+    //     if(nameData[i] != null){
+    //         playerNameArray[i].text = scoreData[i].name+" - "+scoreData[i].score;
+    //     }
+    // }
+    playerNameArray[scoreData.playerId].text = nameData[scoreData.playerId]+" - "+scoreData.score;
 }
 
 function initilizeFirstPlayer(){
@@ -245,7 +248,7 @@ scene.cleanCachedTextureBuffer();
 getText();
 getZoomImage();
 
-scene.getEngine().setHardwareScalingLevel(0.5)
+//scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
 });

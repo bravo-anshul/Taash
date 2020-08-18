@@ -1,6 +1,7 @@
 var express = require('express');
 
 var playerClass = require('./PlayerClass.js');
+const { player } = require('./PlayerClass.js');
 
 var app = express();
 app.use(express.static('public'));
@@ -87,7 +88,7 @@ io.sockets.on('connection',
           player.name = playerName;
         }
       });
-      playersNameArray.push(playerName);
+      playersNameArray[countId] = playerName;
       //io.sockets.emit("writePlayerNames",{playerId : countId, playerName : playerName});
       io.sockets.emit("writePlayerNames", playersNameArray);
 
@@ -102,8 +103,8 @@ io.sockets.on('connection',
       restartGame();
     });
 
-    socket.on('getRemainingCardCount', function(cardData){
-      
+    socket.on('getRemainingCardCount', function(scoreData){
+      updateScore(scoreData);
     });
 
   }
@@ -189,11 +190,16 @@ function checkIfLastCardPlayed(playerCountId){
 }
 
 function getPlayerTurn() {
+  
   if (currentPlayerTurn == 3) {
     currentPlayerTurn = 0;
   }
   else {
     currentPlayerTurn += 1;
+  }
+  
+  if(lastCardPlayed){
+    currentPlayerTurn = 99;
   }
   return currentPlayerTurn;
 }
@@ -265,4 +271,17 @@ function checkIfCardPlayable(cardValues) {
   }
 
   return false;
+}
+
+var updateScoreCount = 0;
+function updateScore(scoreData){
+  updateScoreCount+=1;
+  console.log(scoreData);
+  playersArray.forEach(function(player){
+    if(player.playerCount == scoreData.playerId){
+      player.score += scoreData.points;
+      io.sockets.emit('updateScore',{playerId : scoreData.playerId, score : player.score});
+    }
+  
+  });
 }

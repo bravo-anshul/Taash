@@ -39,7 +39,6 @@
                 font-size: 15px;
                 background:transparent;
             }
-
             #playButton{
                 margin : 20px;
                 border : 2px dashed #009688;
@@ -63,6 +62,7 @@
         <script src="https://preview.babylonjs.com/babylon.js"></script>
         <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
         <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script type="text/javascript" src="dataFile.js"></script>
         <script type="text/javascript" src="CardMap.js"></script>
@@ -71,15 +71,15 @@
     </head>
 
    <body onload="initialize()">
-    <!-- <div id="welcomeDialog" class="divBox">
+    <div id="welcomeDialog" class="divBox">
         <h1> Catch-THE-Match</h1>
         <hr></hr>
         <input id="nameInput" minlength="4" maxlength="8" placeholder="Please enter your name."></input>
         <button type="submit" id="playButton" onclick="addPlayerName()"> Start </button>
-    </div> -->
+    </div>
     <button onclick="openFullscreen();">Open Fullscreen</button>
     <button onclick="demoFunction();">demoFunction</button>
-    <button onclick="demoFunction2();">demoFunction2</button>
+    <button id='playerNameText' onclick="demoFunction2();">demoFunction2</button>
     <canvas id="renderCanvas" ></canvas>
     <script type="text/javascript" src="ClientScript.js"></script>
     <script type="text/javascript" src="RenderScript.js"></script>

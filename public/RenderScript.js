@@ -109,20 +109,7 @@ function getText(){
     }  
 }
 
-function getZoomImage(){
-    console.log("image");
-    var zoomImage = new BABYLON.GUI.Image("but", "resources/vision.png");
-    zoomImage.width = "10%";
-    zoomImage.height = "140px";
-    zoomImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-    zoomImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    zoomImage.paddingBottom = "5%";
-    zoomImage.paddingRight = "2%";
-    advancedTexture.addControl(zoomImage);
-    zoomImage.onPointerDownObservable.add(()=>{
-        changeCamera();
-    });
-}
+
 
 function writePlayerName(recievedNameData){
     nameData = recievedNameData;
@@ -136,11 +123,6 @@ function writePlayerName(recievedNameData){
 }
 
 function writeScore(scoreData){
-    // for(var i = 0;i<4;i++){
-    //     if(nameData[i] != null){
-    //         playerNameArray[i].text = scoreData[i].name+" - "+scoreData[i].score;
-    //     }
-    // }
     playerNameArray[scoreData.playerId].text = nameData[scoreData.playerId]+" - "+scoreData.score;
 }
 
@@ -247,6 +229,7 @@ scene.clearCachedVertexData();
 scene.cleanCachedTextureBuffer();
 getText();
 getZoomImage();
+getSkipImage();
 
 //scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){

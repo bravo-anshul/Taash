@@ -68,6 +68,7 @@ function playerMove(moveData) {
   if (moveData.playerTurn == playerId) {
     if (!checkIfAnyCardPlayable())  {
       console.log("playerSkipped");
+      displaySkipImage();
       socket.emit('playerMove', { cardValue: 0, playerId : playerId });
     }
   }
@@ -201,7 +202,6 @@ function demoFunction() {
 }
 
 function demoFunction2(){
-  cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
   socket.emit('restartGame');
 }
 

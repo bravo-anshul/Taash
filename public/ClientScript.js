@@ -3,6 +3,7 @@ var socket;
 var playerArray;
 var playerId;
 var currentPlayerTurn;
+var fullScreenBoolean=false;
 
 var playerObjectArray = [];
 
@@ -15,12 +16,10 @@ function connectSocket() {
 
   activateEvents();
 }
-
 function activateEvents() {
 
   socket.on('newClientConnect', function (currentPlayerId) {
     playerId = currentPlayerId;
-    console.log("player id is :-" + playerId);
   });
 
   socket.on('recievePlayerArray', function (receivedPlayerArray) {
@@ -45,12 +44,12 @@ function activateEvents() {
 
   socket.on('updateScore', function(scoreData){
     writeScore(scoreData);
+    updateScoreBoard(scoreData);
   });
 
 }
 
 function receivePlayerArray(receivedPlayerArray){
-  console.log(receivedPlayerArray);
     if (playerArray == null) {
       playerArray = arrayLeftShift(receivedPlayerArray, playerId);
       initializeCards();
@@ -109,19 +108,22 @@ function checkIfAnyCardPlayable() {
 }
 
 function addPlayerName() {
+  // if(!fullScreenBoolean){
+  //   alert("Please open in FullScreen");
+  //   return;
+  // }
+    
   var playerName = document.getElementById("nameInput").value;
   if (playerName.length < 2) {
     alert("Please enter more than 2 characters");
     return;
   }
   document.getElementById("welcomeDialog").style.display = 'none';
-  document.getElementById('playerNameText').innerHTML = playerName+" "+playerId;
+  //document.getElementById('playerNameText').innerHTML = playerName+" "+playerId;
   socket.emit('addPlayerName', playerId, playerName);
 }
 
 function playCard(cardValue) {
-  var playerFound;
-  var cardFound;
   var flag = false;
   for (var i = 0; i < 4; i++) {
     for (var j = 0; j < 13; j++) {
@@ -152,8 +154,9 @@ function playCard(cardValue) {
 
 function arrayLeftShift(arr, num) {
   arr = arr.concat(arr.splice(0, num));
-  arr[0].cardArray = arr[0].cardArray.sort();
-  console.log(arr[0].cardArray);
+  arr[0].cardArray.sort(function (a, b) {
+    return a - b;
+  });
   return arr;
 }
 
@@ -169,19 +172,19 @@ function resetCards(){
 }
 
 function initializeCards() {
+  
   initilizeFirstPlayer();
   initilizeSecondPlayer();
   initilizeThirdPlayer();
   initilizeFourthPlayer();
+
 }
 
 function giveRemainingCardCount(){
   var points = 0;
   firstPlayerCardArray.forEach(function(card){
-    console.log(card.getCardPlayedBoolean());
     if(card.getCardPlayedBoolean() == false){
       points += getCardPlayingValue(card.getCardValue());
-      console.log(card.getCardValue());
     }
   });
   console.log(points);
@@ -192,16 +195,8 @@ function demoFunction() {
   console.log("demoFunction");
 
   Tutor1();
-  // var count = 1;
-  // for(var i=0;i<13;i++){
-  //   firstPlayerCardArray[i].updateCardValues(count++);
-  //   secondPlayerCardArray[i].updateCardValues(count++);
-  //   thirdPlayerCardArray[i].updateCardValues(count++);
-  //   fourthPlayerCardArray[i].updateCardValues(count++);
-  // }
 }
 
 function demoFunction2(){
   socket.emit('restartGame');
 }
-

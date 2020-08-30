@@ -1,10 +1,9 @@
 var skipImage;
 
 function getZoomImage(){
-    console.log("zoom image");
     var zoomImage = new BABYLON.GUI.Image("but", "resources/vision.png");
     zoomImage.width = "10%";
-    zoomImage.height = "140px";
+    zoomImage.height = "25%";
     zoomImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
     zoomImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
     zoomImage.paddingBottom = "5%";
@@ -16,10 +15,9 @@ function getZoomImage(){
 }
 
 function getSkipImage(){
-    console.log("skip image");
-    skipImage = new BABYLON.GUI.Image("but", "resources/stop.png");
+    skipImage = new BABYLON.GUI.Image("but", "resources/close.png");
     skipImage.width = "15%";
-    skipImage.height = "140px";
+    skipImage.height = "35%";
     skipImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
     skipImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
     skipImage.paddingBottom = "5%";

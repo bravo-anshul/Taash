@@ -3,6 +3,7 @@ var canvas = document.getElementById("renderCanvas");
 var engine = new BABYLON.Engine(canvas, true);
 var scene;
 var shadowGenerator;
+var shadowGenerator2;
 
 var firstPlayerCardArray = [];
 var secondPlayerCardArray = [];
@@ -17,22 +18,14 @@ var createScene = function(){
     
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3(218/255, 216/255, 216/255);;
-    //var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(4, 1, 1), scene);
-    //var light2 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, 0), scene);
-    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, -2, 1), scene);
-    //light.position = new BABYLON.Vector3(9,4,2);
+    var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -2, -1), scene);
+    light.position = new BABYLON.Vector3(-2,4,5);
     light.intensity = 1;
-    // var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, 20, 5), scene);
-    // light2.position = new BABYLON.Vector3(9,5,-1);
-    // light2.intensity = 2;
-    new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(1, 2, 0), scene);
 
     var cameraPosition = new BABYLON.Vector3(0,2,0);
     var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
-    camera.target = new BABYLON.Vector3(-0.5,0.1,2.5);
+    camera.target = new BABYLON.Vector3(0,0.1,2.5);
     camera.alpha = -Math.PI / 1.98;
-    
-    //var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.3, 8, cameraPosition, scene);
     //camera.attachControl(canvas, true);
     
     var ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 100, width: 100, subdivisions: 1}, scene);    
@@ -46,48 +39,19 @@ var createScene = function(){
     shadowGenerator = new BABYLON.ShadowGenerator(700, light);
     shadowGenerator.useBlurExponentialShadowMap = true;
     shadowGenerator.useKernelBlur = true;
-    shadowGenerator.blurKernel = 64;    
-    
-    // initilizeFirstPlayer();
-    // initilizeSecondPlayer();
-    // initilizeThirdPlayer();
-    // initilizeFourthPlayer();
+    shadowGenerator.blurKernel = 80;    
+    // var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
+	// lightSphere.position = light.position;
+	// lightSphere.material = new BABYLON.StandardMaterial("light", scene);
+	// lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
 
-
-    async function Tutor2() {
-        for(var i=0;i<13;i++){
-            firstPlayerCardArray[i].playAnimation();
-            await sleep(200);
-        }
-        
-    }
-    async function Tutor3() {
-        for(var i=0;i<13;i++){
-            thirdPlayerArray[i].playAnimation();
-            await sleep(200);
-        }
-        
-    }
-    async function Tutor4() {
-        for(var i=0;i<13;i++){
-            fourthPlayerArray[i].playAnimation();
-            await sleep(200);
-        }
-    }
-
-    new cardMap("brickMap",-2.0);
-    new cardMap("brickMap",-0.5);
-    new cardMap("birdMap",1.0);
-    new cardMap("birdMap",2.5);
+    new cardMap("2",-2.0);
+    new cardMap("3",-0.5);
+    new cardMap("4",1.0);
+    new cardMap("1",2.5);
 
     //var demoCard = new CardClass();
-
-    //Tutor1();
-    // Tutor2();
-    // Tutor3();
-    // Tutor4();
-
     return scene;
 }
 
@@ -95,13 +59,14 @@ var advancedTexture ;
 
 function getText(){
     advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    for(var j=0,i=6;i<30;j++,i+=6){
+    for(var j=0,i=4;i<30;j++,i+=6){
         var text1 = new BABYLON.GUI.TextBlock();
         text1.text = "";
         text1.color = "black";
-        text1.fontSize = "16vw";
+        text1.fontSize = "30vw";
         text1.left = "2%";
         text1.paddingBottom = (i+3)+"%";
+        text1.font = "Sans-serif";
         text1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
         advancedTexture.addControl(text1);    
@@ -109,7 +74,13 @@ function getText(){
     }  
 }
 
-
+function writeTempNames(){
+    var recievedNameData = ['Anshul','Aastha','Abhishek','Ashu'];
+    nameData = recievedNameData;
+    for(var i = 0;i<4;i++){
+        playerNameArray[i].text = recievedNameData[i]+" - 0";
+    }
+}
 
 function writePlayerName(recievedNameData){
     nameData = recievedNameData;
@@ -118,12 +89,15 @@ function writePlayerName(recievedNameData){
             playerNameArray[i].text = recievedNameData[i]+" - 0";
         }
     }
-    if(recievedNameData.length == 4)
-        Tutor1();
+    if(recievedNameData.length == 4){
+        initializeCards();
+    }
 }
 
 function writeScore(scoreData){
-    playerNameArray[scoreData.playerId].text = nameData[scoreData.playerId]+" - "+scoreData.score;
+    scoreData.forEach(function(data){
+        playerNameArray[data.playerId].text = nameData[data.playerId]+" - "+data.totalScore;  
+    });
 }
 
 function initilizeFirstPlayer(){
@@ -134,7 +108,7 @@ function initilizeFirstPlayer(){
                                     firstPlayerCardPosition.yAxisRotation,
                                     1.5,playerArray[0].cardArray[i]);
         firstPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
     }
 }
 
@@ -146,7 +120,7 @@ function initilizeSecondPlayer(){
                                     secondPlayerCardPosition.zAxis+z,
                                     secondPlayerCardPosition.yAxisRotation-yr,
                                     0.3,playerArray[1].cardArray[i]);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         secondPlayerCardArray.push(tempCard);
     }
 }
@@ -159,7 +133,7 @@ function initilizeThirdPlayer(){
                                     thirdPlayerCardPosition.yAxisRotation,
                                     0.2,playerArray[2].cardArray[i]);
         thirdPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
 }
@@ -172,48 +146,25 @@ function initilizeFourthPlayer(){
                                     fourthPlayerCardPosition.yAxisRotation+yr,
                                     0.1,playerArray[3].cardArray[i]);
         fourthPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
+    Tutor1();
 }
 
 async function Tutor1() {
     for(var i=0;i<13;i++){
         firstPlayerCardArray[i].playStartAnimation();
-        //await sleep(150);
+        await sleep(150);
         secondPlayerCardArray[i].playStartAnimation();
-        //await sleep(150);
+        await sleep(150);
         thirdPlayerCardArray[i].playStartAnimation();
-        //await sleep(150);
+        await sleep(150);
         fourthPlayerCardArray[i].playStartAnimation();
-        //await sleep(150);
+        await sleep(150);
      }
 }
 
-function getPlant(){
-    BABYLON.SceneLoader.Append("resources/plant/", "boxwood_plant.obj", scene, function (scene) {
-        // Create a default arc rotate camera and light.
-        scene.createDefaultCameraOrLight(true, true, true);
-
-        // The default camera looks at the back of the asset.
-        // Rotate the camera by 180 degrees to the front of the asset.
-        scene.activeCamera.alpha += Math.PI;
-    });
-}
-
-var elem = document.documentElement;
-function openFullscreen() {
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
-    }
-    engine.resize();
-}
 
 async function sleepFor(millisecond){
     await sleep(millisecond);
@@ -231,8 +182,11 @@ getText();
 getZoomImage();
 getSkipImage();
 
-//scene.getEngine().setHardwareScalingLevel(0.5)
+scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
+});
+window.addEventListener("resize", function () {
+    engine.resize();
 });
 engine.doNotHandleContextLost = true;

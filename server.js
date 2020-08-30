@@ -17,6 +17,7 @@ var playersNameArray = [];
 var cardsRestricitonArray = [];
 var currentPlayerTurn;
 var lastCardPlayed = false;
+var gamesPlayed = 0;
 //  0 = heartTop , 1 = heartBottom, 2 = spade , 4 = club , 6 = diamond
 
 io.sockets.on('connection',
@@ -27,12 +28,12 @@ io.sockets.on('connection',
     var newPlayer = new playerClass.player(socket.id, playersArray.length);
     socket.emit('newClientConnect', playersArray.length);
 
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
 
     playersArray.push(newPlayer);
     console.log("playerCount is :" + playersArray.length);
@@ -50,37 +51,36 @@ io.sockets.on('connection',
         }
       }
     );
+    // socket.on('playerMove',
+    //   function (moveData) {
+    //     if(moveData.playerId == currentPlayerTurn)
+    //       if (checkIfCardPlayable(moveData)){
+    //         checkIfLastCardPlayed(moveData.playerId);
+    //         io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
+    //                                         playerTurn: getPlayerTurn(), 
+    //                                         cardsRestricitonArray: cardsRestricitonArray,
+    //                                         lastCardPlayed : lastCardPlayed                                          
+    //                                       });
+    //       }
+    //       else if(moveData.cardValue == 0) {
+    //         io.sockets.emit('playerMove', { cardValue: 0, 
+    //                                         playerTurn: getPlayerTurn(), 
+    //                                         cardsRestricitonArray: cardsRestricitonArray,
+    //                                         lastCardPlayed : lastCardPlayed
+    //                                       });
+    //      }
+    //   }
+    // );
+
     socket.on('playerMove',
       function (moveData) {
-        if(moveData.playerId == currentPlayerTurn)
-          if (checkIfCardPlayable(moveData)){
-            checkIfLastCardPlayed(moveData.playerId);
+        //checkIfLastCardPlayed(moveData.playerId);
             io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
                                             playerTurn: getPlayerTurn(), 
                                             cardsRestricitonArray: cardsRestricitonArray,
                                             lastCardPlayed : lastCardPlayed                                          
                                           });
-          }
-          else if(moveData.cardValue == 0) {
-            io.sockets.emit('playerMove', { cardValue: 0, 
-                                            playerTurn: getPlayerTurn(), 
-                                            cardsRestricitonArray: cardsRestricitonArray,
-                                            lastCardPlayed : lastCardPlayed
-                                          });
-         }
-      }
-      // socket.on('playerMove',
-      // function (moveData) {
-      //   //checkIfLastCardPlayed(moveData.playerId);
-      //       io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
-      //                                       playerTurn: getPlayerTurn(), 
-      //                                       cardsRestricitonArray: cardsRestricitonArray,
-      //                                       lastCardPlayed : lastCardPlayed                                          
-      //                                     });
-          
-        
-      // }
-    );
+                                        });
 
     socket.on('addPlayerName', function (countId, playerName) {
       playersArray.forEach(function (player) {
@@ -111,7 +111,21 @@ io.sockets.on('connection',
 
 );
 
+function newGame(){
+  gamesPlayed = 0;
+  resetPlayereScore();
+}
+
+function resetPlayereScore(){
+  playersArray.forEach(function(player){
+    player.score = 0;
+  });
+}
+
 function restartGame(){
+  gamesPlayed+=1;
+  updateScoreCount = 0;
+  scoreDataArray = [];
   lastCardPlayed = false;
   cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
   setCardCountToZero();
@@ -274,14 +288,24 @@ function checkIfCardPlayable(cardValues) {
 }
 
 var updateScoreCount = 0;
+var scoreDataArray = [];
+
 function updateScore(scoreData){
   updateScoreCount+=1;
-  console.log(scoreData);
   playersArray.forEach(function(player){
     if(player.playerCount == scoreData.playerId){
       player.score += scoreData.points;
-      io.sockets.emit('updateScore',{playerId : scoreData.playerId, score : player.score});
+      var tempScoreData = {playerId : scoreData.playerId, totalScore : player.score, currentScore : scoreData.points};
+      scoreDataArray.push(tempScoreData);
     }
-  
   });
-}
+  if(updateScoreCount == 4){
+    scoreDataArray.sort(function (a, b) {
+      return a.currentScore - b.currentScore;
+    });
+  
+    console.log(scoreDataArray);
+    io.sockets.emit('updateScore',scoreDataArray);
+    setTimeout(function() { restartGame(); }, 10000);
+  }
+} 

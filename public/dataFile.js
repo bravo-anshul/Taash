@@ -1,4 +1,4 @@
-var downCameraPosition = new BABYLON.Vector3(0.6,7.5,-5.7);
+var downCameraPosition = new BABYLON.Vector3(0.6,7.5,-6.0);
 var upCameraPosition = new BABYLON.Vector3(0,9,0);
 
 var heartCardValue = -2.0;
@@ -51,7 +51,7 @@ function getTableCardPosition(cardValue){
     if(cardValue < 14){
         x = heartCardValue;
         z = -0.7 + (cardValue * 0.5);
-
+        
     }
     else if(cardValue < 27){
         cardValue = cardValue - 13;

@@ -12,7 +12,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     var b = new BABYLON.Vector4(0,0, 0.5, 1); // back image = second half along the width     
     
     
-    var card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.5, width:1, sideOrientation: BABYLON.Mesh.DOUBLESIDE, frontUVs: b, backUVs: f}, scene);
+    var card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.4, width:1, sideOrientation: BABYLON.Mesh.DOUBLESIDE, frontUVs: b, backUVs: f}, scene);
     card.rotation.x = -1.57;
     card.position = new BABYLON.Vector3(cardOriginX,yAxis,cardOriginZ);
 
@@ -78,7 +78,6 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     function playCardFunction(){
         //if(checkIfCardPlayable(getServerCardValue(cardValue))){
             cardPlayed = true;
-            console.log("inside if ");
             socket.emit('playerMove',  getServerCardValue(cardValue));
         //}
     } 
@@ -217,6 +216,7 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         //materialGround.diffuseTexture = new BABYLON.Texture("resources/blackCard2.png", scene);
         materialGround.specularColor = new BABYLON.Color3(0,0,0);
         materialGround.diffuseTexture.hasAlpha = true;
+        materialGround.emissiveColor = new BABYLON.Color3(255,255,255);
         card.material = materialGround;
 
 

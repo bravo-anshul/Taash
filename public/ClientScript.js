@@ -47,6 +47,10 @@ function activateEvents() {
     updateScoreBoard(scoreData);
   });
 
+  socket.on('displayFinalResult', function(scoreDataArray){
+    updateFinalScoreBoard(scoreDataArray);
+  });
+
 }
 
 function receivePlayerArray(receivedPlayerArray){

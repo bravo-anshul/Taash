@@ -16,6 +16,24 @@ function hideCurrentScoreBox(){
     document.getElementById('currentScoreBox').style.display = "none";
 }
 
+function updateFinalScoreBoard(scoreData){
+    for(var i=1;i<5;i++){
+        document.getElementById(i+'PlayerTextFinal').innerHTML = nameData[scoreData[i-1].playerId];
+        document.getElementById(i+'PlayerScoreFinal').innerHTML = scoreData[i-1].totalScore;
+    }
+    displayFinalScoreBoard();
+}
+
+function displayFinalScoreBoard(){
+    document.getElementById('finalScoreBoard').style.display = "block";
+    setTimeout(function() { hideFinalScoreBoard(); }, 20000);
+}
+
+function hideFinalScoreBoard(){
+    document.getElementById('finalScoreBoard').style.display = "none";
+    socket.emit('restartGame');
+}
+
 var elem = document.documentElement;
 function openFullscreen() {
     fullScreenBoolean = true;

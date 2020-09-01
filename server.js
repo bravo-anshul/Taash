@@ -28,12 +28,12 @@ io.sockets.on('connection',
     var newPlayer = new playerClass.player(socket.id, playersArray.length);
     socket.emit('newClientConnect', playersArray.length);
 
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
 
     playersArray.push(newPlayer);
     console.log("playerCount is :" + playersArray.length);
@@ -51,36 +51,36 @@ io.sockets.on('connection',
         }
       }
     );
-    // socket.on('playerMove',
-    //   function (moveData) {
-    //     if(moveData.playerId == currentPlayerTurn)
-    //       if (checkIfCardPlayable(moveData)){
-    //         checkIfLastCardPlayed(moveData.playerId);
-    //         io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
-    //                                         playerTurn: getPlayerTurn(), 
-    //                                         cardsRestricitonArray: cardsRestricitonArray,
-    //                                         lastCardPlayed : lastCardPlayed                                          
-    //                                       });
-    //       }
-    //       else if(moveData.cardValue == 0) {
-    //         io.sockets.emit('playerMove', { cardValue: 0, 
-    //                                         playerTurn: getPlayerTurn(), 
-    //                                         cardsRestricitonArray: cardsRestricitonArray,
-    //                                         lastCardPlayed : lastCardPlayed
-    //                                       });
-    //      }
-    //   }
-    // );
-
     socket.on('playerMove',
       function (moveData) {
-        //checkIfLastCardPlayed(moveData.playerId);
+        if(moveData.playerId == currentPlayerTurn)
+          if (checkIfCardPlayable(moveData)){
+            checkIfLastCardPlayed(moveData.playerId);
             io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
                                             playerTurn: getPlayerTurn(), 
                                             cardsRestricitonArray: cardsRestricitonArray,
                                             lastCardPlayed : lastCardPlayed                                          
                                           });
-                                        });
+          }
+          else if(moveData.cardValue == 0) {
+            io.sockets.emit('playerMove', { cardValue: 0, 
+                                            playerTurn: getPlayerTurn(), 
+                                            cardsRestricitonArray: cardsRestricitonArray,
+                                            lastCardPlayed : lastCardPlayed
+                                          });
+         }
+      }
+    );
+
+    // socket.on('playerMove',
+    //   function (moveData) {
+    //     //checkIfLastCardPlayed(moveData.playerId);
+    //         io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
+    //                                         playerTurn: getPlayerTurn(), 
+    //                                         cardsRestricitonArray: cardsRestricitonArray,
+    //                                         lastCardPlayed : lastCardPlayed                                          
+    //                                       });
+    //                                     });
 
     socket.on('addPlayerName', function (countId, playerName) {
       playersArray.forEach(function (player) {
@@ -111,26 +111,26 @@ io.sockets.on('connection',
 
 );
 
-function newGame(){
-  gamesPlayed = 0;
-  resetPlayereScore();
-}
-
-function resetPlayereScore(){
-  playersArray.forEach(function(player){
-    player.score = 0;
-  });
-}
-
 function restartGame(){
-  gamesPlayed+=1;
-  updateScoreCount = 0;
-  scoreDataArray = [];
-  lastCardPlayed = false;
-  cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
   setCardCountToZero();
   distributeCards();
   setFirstPlayer();      
+}
+
+function checkGameCount(){
+  console.log("game numner"+gamesPlayed);
+  if(gamesPlayed > 3){
+    newGame();
+  }
+  else{
+    io.sockets.emit('updateScore',scoreDataArray);
+    setTimeout(function() { restartGame(); }, 10000);
+    gamesPlayed+=1;
+    updateScoreCount = 0;
+    scoreDataArray = [];
+    lastCardPlayed = false;
+    cardsRestricitonArray = [8, 7, 8, 7, 8, 7, 8, 7];
+  }
 }
 
 function setCardCountToZero(){
@@ -139,6 +139,20 @@ function setCardCountToZero(){
   });
 }
 
+function newGame(){
+  console.log("isnide new ga,e");
+  io.sockets.emit('displayFinalResult',scoreDataArray);
+  gamesPlayed = 0;
+  resetPlayereScore();
+  setTimeout(function() { restartGame(); }, 20000);
+  //restartGame();
+}
+
+function resetPlayereScore(){
+  playersArray.forEach(function(player){
+    player.score = 0;
+  });
+}
 
 function removePlayer(disconnectedSocketId) {
 
@@ -305,7 +319,6 @@ function updateScore(scoreData){
     });
   
     console.log(scoreDataArray);
-    io.sockets.emit('updateScore',scoreDataArray);
-    setTimeout(function() { restartGame(); }, 10000);
+    checkGameCount();
   }
 } 

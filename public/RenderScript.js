@@ -90,7 +90,7 @@ function writePlayerName(recievedNameData){
         }
     }
     if(recievedNameData.length == 4){
-        initializeCards();
+        Tutor1();
     }
 }
 
@@ -108,7 +108,7 @@ function initilizeFirstPlayer(){
                                     firstPlayerCardPosition.yAxisRotation,
                                     1.5,playerArray[0].cardArray[i]);
         firstPlayerCardArray.push(tempCard);
-        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
     }
 }
 
@@ -120,7 +120,7 @@ function initilizeSecondPlayer(){
                                     secondPlayerCardPosition.zAxis+z,
                                     secondPlayerCardPosition.yAxisRotation-yr,
                                     0.3,playerArray[1].cardArray[i]);
-        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         secondPlayerCardArray.push(tempCard);
     }
 }
@@ -133,7 +133,7 @@ function initilizeThirdPlayer(){
                                     thirdPlayerCardPosition.yAxisRotation,
                                     0.2,playerArray[2].cardArray[i]);
         thirdPlayerCardArray.push(tempCard);
-        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
 }
@@ -146,10 +146,9 @@ function initilizeFourthPlayer(){
                                     fourthPlayerCardPosition.yAxisRotation+yr,
                                     0.1,playerArray[3].cardArray[i]);
         fourthPlayerCardArray.push(tempCard);
-        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
-    Tutor1();
 }
 
 async function Tutor1() {
@@ -182,7 +181,7 @@ getText();
 getZoomImage();
 getSkipImage();
 
-scene.getEngine().setHardwareScalingLevel(0.5)
+//scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
 });

@@ -26,7 +26,6 @@ var createScene = function(){
     var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
     camera.target = new BABYLON.Vector3(0,0.1,2.5);
     camera.alpha = -Math.PI / 1.98;
-    camera.attachControl(canvas, true);
     
     var ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 100, width: 100, subdivisions: 1}, scene);    
     var material = new BABYLON.StandardMaterial("myMaterial", scene);

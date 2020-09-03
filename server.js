@@ -28,12 +28,12 @@ io.sockets.on('connection',
     var newPlayer = new playerClass.player(socket.id, playersArray.length);
     socket.emit('newClientConnect', playersArray.length);
 
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
-    playersArray.push(newPlayer);
-    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    // playersArray.push(newPlayer);
+    // newPlayer = new playerClass.player(socket.id,playersArray.length);
 
     playersArray.push(newPlayer);
     console.log("playerCount is :" + playersArray.length);

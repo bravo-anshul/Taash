@@ -3,7 +3,7 @@ function cardMap(map_name, xaxis){
 
     card = BABYLON.MeshBuilder.CreatePlane("card", {height:1.5, width:1,}, scene);
     card.rotation.x = 1.57;
-    card.position = new BABYLON.Vector3(xaxis,0.1,2.5);
+    card.position = new BABYLON.Vector3(xaxis,0.1,2.8);
 
     var mat = new BABYLON.StandardMaterial("", scene);
     //mat.diffuseTexture = new BABYLON.Texture("resources/"+map_name+".png", scene);

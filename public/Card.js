@@ -32,8 +32,8 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
 
     card.actionManager = new BABYLON.ActionManager(scene);
 
-    //if(cardRotationAngle == firstPlayerCardPosition.yAxisRotation)
-    card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
+    if(cardRotationAngle == firstPlayerCardPosition.yAxisRotation)
+        card.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickUpTrigger,  playCard));
 
     this.playStartAnimation = function(){
         assignPlayAnimation();
@@ -76,10 +76,8 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
     }
 
     function playCardFunction(){
-        //if(checkIfCardPlayable(getServerCardValue(cardValue))){
             cardPlayed = true;
             socket.emit('playerMove',  getServerCardValue(cardValue));
-        //}
     } 
 
     //////////////////////////////////////////////////////// end of class ///////////////////////////////////////////////////////////////////
@@ -194,13 +192,10 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         animationPosition.setKeys(keysPosition);
         animationRotation.setKeys(keysRotation);
         animationYRotation.setKeys(keysYAngle);
-    
         
         playAnimationGroup.addTargetedAnimation(animationPosition, card);
         playAnimationGroup.addTargetedAnimation(animationRotation, card);
         playAnimationGroup.addTargetedAnimation(animationYRotation, card);
-
-
 
     }
     
@@ -218,7 +213,6 @@ function CardClass(xAxis,yAxis,zAxis,cardRotationAngle,endingAngle,cValue){
         materialGround.diffuseTexture.hasAlpha = true;
         materialGround.emissiveColor = new BABYLON.Color3(255,255,255);
         card.material = materialGround;
-
 
         cardValues = getCardString(cardValue);
         setNewMaterial();

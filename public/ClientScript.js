@@ -42,6 +42,10 @@ function activateEvents() {
     playCard(cardValue);
   });
 
+  socket.on('writeScore', function(scoreData){
+    writeScore(scoreData);
+  });
+
   socket.on('updateScore', function(scoreData){
     writeScore(scoreData);
     updateScoreBoard(scoreData);
@@ -49,6 +53,7 @@ function activateEvents() {
 
   socket.on('displayFinalResult', function(scoreDataArray){
     updateFinalScoreBoard(scoreDataArray);
+    resetScore(scoreDataArray);
   });
 
 }
@@ -103,8 +108,6 @@ function checkIfAnyCardPlayable() {
   firstPlayerCardArray.forEach(function(card){
 
     if (checkIfCardPlayable(getServerCardValue(card.getCardValue()))){
-      //cardToPlay = getServerCardValue(cardValue);
-      card.playCardTemp();
       isPlayable = true;
     }
   });
@@ -112,10 +115,10 @@ function checkIfAnyCardPlayable() {
 }
 
 function addPlayerName() {
-  // if(!fullScreenBoolean){
-  //   alert("Please open in FullScreen");
-  //   return;
-  // }
+  if(!fullScreenBoolean){
+    alert("Please open in FullScreen");
+    return;
+  }
     
   var playerName = document.getElementById("nameInput").value;
   if (playerName.length < 2) {

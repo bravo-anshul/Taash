@@ -14,6 +14,20 @@ function getZoomImage(){
     });
 }
 
+function getFullScreenImage(){
+    var fullScreenImage = new BABYLON.GUI.Image("but", "resources/fullScreen.png");
+    fullScreenImage.width = "10%";
+    fullScreenImage.height = "20%";
+    fullScreenImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    fullScreenImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    fullScreenImage.paddingTop = "5%";
+    fullScreenImage.paddingRight = "2%";
+    advancedTexture.addControl(fullScreenImage);
+    fullScreenImage.onPointerDownObservable.add(()=>{
+        openFullscreen();
+    });
+}
+
 function getSkipImage(){
     skipImage = new BABYLON.GUI.Image("but", "resources/close.png");
     skipImage.width = "15%";

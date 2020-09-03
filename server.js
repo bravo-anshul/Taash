@@ -28,12 +28,12 @@ io.sockets.on('connection',
     var newPlayer = new playerClass.player(socket.id, playersArray.length);
     socket.emit('newClientConnect', playersArray.length);
 
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
-    // playersArray.push(newPlayer);
-    // newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
+    playersArray.push(newPlayer);
+    newPlayer = new playerClass.player(socket.id,playersArray.length);
 
     playersArray.push(newPlayer);
     console.log("playerCount is :" + playersArray.length);
@@ -72,16 +72,6 @@ io.sockets.on('connection',
       }
     );
 
-    // socket.on('playerMove',
-    //   function (moveData) {
-    //     //checkIfLastCardPlayed(moveData.playerId);
-    //         io.sockets.emit('playerMove', { cardValue: moveData.numericCardValue, 
-    //                                         playerTurn: getPlayerTurn(), 
-    //                                         cardsRestricitonArray: cardsRestricitonArray,
-    //                                         lastCardPlayed : lastCardPlayed                                          
-    //                                       });
-    //                                     });
-
     socket.on('addPlayerName', function (countId, playerName) {
       playersArray.forEach(function (player) {
         if (player.playerCount == countId) {
@@ -89,7 +79,6 @@ io.sockets.on('connection',
         }
       });
       playersNameArray[countId] = playerName;
-      //io.sockets.emit("writePlayerNames",{playerId : countId, playerName : playerName});
       io.sockets.emit("writePlayerNames", playersNameArray);
 
     });
@@ -119,7 +108,7 @@ function restartGame(){
 
 function checkGameCount(){
   console.log("game numner"+gamesPlayed);
-  if(gamesPlayed > 3){
+  if(gamesPlayed > 2){
     newGame();
   }
   else{
@@ -140,12 +129,11 @@ function setCardCountToZero(){
 }
 
 function newGame(){
-  console.log("isnide new ga,e");
   io.sockets.emit('displayFinalResult',scoreDataArray);
   gamesPlayed = 0;
   resetPlayereScore();
+  io.sockets.emit('writeScore',scoreDataArray);
   setTimeout(function() { restartGame(); }, 20000);
-  //restartGame();
 }
 
 function resetPlayereScore(){
@@ -204,7 +192,6 @@ function setFirstPlayer() {
     if (flag)
       break;
   }
-  console.log("cureent player :" + currentPlayerTurn);
   io.sockets.emit('playerTurn', currentPlayerTurn);
 }
 

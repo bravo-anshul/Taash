@@ -51,24 +51,41 @@ function getTableCardPosition(cardValue){
     if(cardValue < 14){
         x = heartCardValue;
         z = -0.7 + (cardValue * 0.5);
-        
+        y = getYAxis(cardValue);
     }
     else if(cardValue < 27){
         cardValue = cardValue - 13;
         x = spadeCardValue;
-        z = -0.5 + (cardValue * 0.5);
+        z = -0.7 + (cardValue * 0.5);
+        y = getYAxis(cardValue);
     }
     else if(cardValue < 40){
         cardValue = cardValue - 26;
         x = clubCardValue;
-        z = -0.5 + (cardValue * 0.5);
+        z = -0.7 + (cardValue * 0.5);
+        y = getYAxis(cardValue);
     }
     else if(cardValue < 53){
         cardValue = cardValue - 39;
         x = diamondCardValue;
-        z = -0.5 + (cardValue * 0.5);
+        z = -0.7 + (cardValue * 0.5);
+        y = getYAxis(cardValue);
     }
     return new BABYLON.Vector3(x,y,z);
+}
+
+function getYAxis(cardValue){
+  var y;
+  if(cardValue == 7){
+    y = 0.15;
+  }
+  else if(cardValue > 7){
+    y = 0.15 + (cardValue/1000);
+  }
+  else if(cardValue < 7){
+    y = 0.14 - (cardValue/1000);
+  }
+  return y;
 }
 
 function getCardString(cardValue){

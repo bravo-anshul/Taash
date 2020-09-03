@@ -26,7 +26,7 @@ var createScene = function(){
     var camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 1.98, 0.8, 8, cameraPosition, scene);
     camera.target = new BABYLON.Vector3(0,0.1,2.5);
     camera.alpha = -Math.PI / 1.98;
-    //camera.attachControl(canvas, true);
+    camera.attachControl(canvas, true);
     
     var ground = BABYLON.MeshBuilder.CreateGround("ground", {height: 100, width: 100, subdivisions: 1}, scene);    
     var material = new BABYLON.StandardMaterial("myMaterial", scene);
@@ -39,11 +39,7 @@ var createScene = function(){
     shadowGenerator = new BABYLON.ShadowGenerator(700, light);
     shadowGenerator.useBlurExponentialShadowMap = true;
     shadowGenerator.useKernelBlur = true;
-    shadowGenerator.blurKernel = 80;    
-    // var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-	// lightSphere.position = light.position;
-	// lightSphere.material = new BABYLON.StandardMaterial("light", scene);
-	// lightSphere.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
+    shadowGenerator.blurKernel = 80;
 
 
     new cardMap("2",-2.0);
@@ -100,6 +96,12 @@ function writeScore(scoreData){
     });
 }
 
+function resetScore(scoreData){
+    scoreData.forEach(function(data){
+        playerNameArray[data.playerId].text = nameData[data.playerId]+" - 0";  
+    });
+}
+
 function initilizeFirstPlayer(){
     for(var i=0,x=0,y=0.4,z=0;i<13;i++,x+=0.6,y+=0.01,z-=0.01){
         var tempCard = new CardClass(firstPlayerCardPosition.xAxis+x,                         
@@ -108,7 +110,7 @@ function initilizeFirstPlayer(){
                                     firstPlayerCardPosition.yAxisRotation,
                                     1.5,playerArray[0].cardArray[i]);
         firstPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
     }
 }
 
@@ -120,7 +122,7 @@ function initilizeSecondPlayer(){
                                     secondPlayerCardPosition.zAxis+z,
                                     secondPlayerCardPosition.yAxisRotation-yr,
                                     0.3,playerArray[1].cardArray[i]);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         secondPlayerCardArray.push(tempCard);
     }
 }
@@ -133,7 +135,7 @@ function initilizeThirdPlayer(){
                                     thirdPlayerCardPosition.yAxisRotation,
                                     0.2,playerArray[2].cardArray[i]);
         thirdPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
 }
@@ -146,7 +148,7 @@ function initilizeFourthPlayer(){
                                     fourthPlayerCardPosition.yAxisRotation+yr,
                                     0.1,playerArray[3].cardArray[i]);
         fourthPlayerCardArray.push(tempCard);
-        //shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
+        shadowGenerator.getShadowMap().renderList.push(tempCard.getCard());
         
     }
 }
@@ -180,8 +182,9 @@ scene.cleanCachedTextureBuffer();
 getText();
 getZoomImage();
 getSkipImage();
+getFullScreenImage();
 
-//scene.getEngine().setHardwareScalingLevel(0.5)
+scene.getEngine().setHardwareScalingLevel(0.5)
 engine.runRenderLoop(function(){
     scene.render();
 });
